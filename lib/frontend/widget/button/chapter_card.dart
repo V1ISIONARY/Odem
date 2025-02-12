@@ -30,7 +30,7 @@ class ChapterCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ContentTitle(title: 'Chapter ${chapter}'),
-                ContentDescrip(description: '${date} ⋅ Page ${page}', size: 9)
+                ContentDescrip(description: '${date} ⋅ Page: ${page}', size: 9)
               ],
             ),
             GestureDetector(

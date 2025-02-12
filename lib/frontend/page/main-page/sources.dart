@@ -127,7 +127,7 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
                             ? Container(
                                 width: double.infinity,
                                 height: 5.0,
-                                color: primary_color,
+                                color: Colors.white,
                               )
                             : SizedBox(),
                         ),
@@ -149,6 +149,7 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         centerTitle: false,
         title: Text(
           'Sources',

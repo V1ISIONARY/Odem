@@ -31,12 +31,30 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   flutter_bloc: ^8.1.6
   flutter_svg: ^2.0.14
   page_transition: ^2.0.5
   cupertino_icons: ^1.0.8
+  shared_preferences: ^2.3.2
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/resources/image/visionary.png"
+  min_sdk_android: 21 #
+  web:
+    generate: true
+    image_path: "lib/resources/image/visionary.png"
+    background_color: "#FFFFF"
+    theme_color: "#FFFFF"
+  windows:
+    generate: true
+    image_path: "lib/resources/image/visionary.png"
+    icon_size: 48 
+  macos:
+    generate: true
+    image_path: "lib/resources/image/visionary.png"
 
 dev_dependencies:
   flutter_test:

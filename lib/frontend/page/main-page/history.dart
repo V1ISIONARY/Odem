@@ -19,6 +19,7 @@ class _HistoryState extends State<History> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
         centerTitle: false,
         title: Text(
           'History',

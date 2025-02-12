@@ -4,3 +4,6 @@ import 'dart:ui';
 final primary_color = Color.fromRGBO(21, 33, 34, 1);
 // ignore: non_constant_identifier_names
 final secondary_color = Color.fromRGBO(21, 33, 34, 1);
+
+// ignore: non_constant_identifier_names
+final widget_primary_color = Color.fromRGBO(21, 33, 34, 1);

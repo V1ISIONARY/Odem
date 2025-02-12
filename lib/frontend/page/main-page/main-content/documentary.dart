@@ -5,7 +5,7 @@ import 'package:odem/frontend/widget/design/fade.dart';
 import 'package:odem/frontend/widget/schema/color.dart';
 import 'package:odem/frontend/widget/schema/text_format.dart';
 
-import '../../../widget/button/category_card.dart';
+import '../../../widget/design/category_compo.dart';
 import '../../../widget/button/chapter_card.dart';
 
 class Documentary extends StatefulWidget {
@@ -326,7 +326,7 @@ class _DocumentaryState extends State<Documentary> {
                       padding: EdgeInsets.symmetric(
                         vertical: 10
                       ),
-                      child: CategoryCard(),
+                      child: CategoryCompo(),
                     ),
                     Container(
                       width: double.infinity,

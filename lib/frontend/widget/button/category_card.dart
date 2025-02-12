@@ -8,6 +8,7 @@ class CategoryCard extends StatefulWidget {
 }
 
 class _CategoryCardState extends State<CategoryCard> {
+  String selectedCategory = 'Manhwa'; 
 
   @override
   Widget build(BuildContext context) {
@@ -16,18 +17,18 @@ class _CategoryCardState extends State<CategoryCard> {
       height: 30,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Row(  
+        child: Row(
           children: [
             const SizedBox(width: 15),
             _buildCategoryItem('Manhwa'),
             _buildCategoryItem('Action'),
-            _buildCategoryItem('Adventuret'),
+            _buildCategoryItem('Adventure'),
             _buildCategoryItem('Fantasy'),
             _buildCategoryItem('Shounen'),
             _buildCategoryItem('Mamamu'),
             _buildCategoryItem('Pulko'),
             _buildCategoryItem('Banana'),
-            const SizedBox(width: 15)
+            const SizedBox(width: 15),
           ],
         ),
       ),
@@ -35,30 +36,37 @@ class _CategoryCardState extends State<CategoryCard> {
   }
 
   Widget _buildCategoryItem(String label) {
+    bool isSelected = selectedCategory == label;
 
-    return Container(
-      margin: const EdgeInsets.only(right: 10), 
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(5), 
-        border: Border.all(
-          width: 1,
-          color: Colors.white70
-        )
-      ),
-      height: 30, 
-      child: Center(
-        child: Text(
-          label,
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 9,
-            fontWeight: FontWeight.w400,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedCategory = label; 
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.transparent,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            width: 1,
+            color: isSelected ? Colors.blue : Colors.white70,
+          ),
+        ),
+        height: 30,
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.white70, // Change text color
+              fontSize: 9,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       ),
     );
   }
-
 }

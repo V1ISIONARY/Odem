@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../widget/bottom_navigation.dart';
 import '../../widget/button/single_card.dart';
 import '../../widget/schema/text_format.dart';
 
 class Explore extends StatefulWidget {
 
   final String userToken;
+  final VoidCallback drawble;
 
   const Explore({
     super.key,
-    required this.userToken
+    required this.userToken,
+    required this.drawble
   });
 
   @override
@@ -17,6 +20,7 @@ class Explore extends StatefulWidget {
 
 class _ExploreState extends State<Explore> with TickerProviderStateMixin {
 
+  final GlobalKey<BottomNavigationState> drawerOpen = GlobalKey<BottomNavigationState>();
   late AnimationController _controller;
   late Animation<Offset> _hintAnimation;
   late Animation<Color?> _hintColorAnimation;
@@ -149,6 +153,29 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                height: 50,
+                child: Center(
+                  child: GestureDetector(
+                    onTap: widget.drawble,
+                    child: Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'lib/resources/image/static/solo.png',
+                          fit: BoxFit.cover, 
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ),
+              SizedBox(width: 10),
               Expanded(
                 child: Container(
                   height: 50,

@@ -6,8 +6,7 @@ import 'package:odem/frontend/page/main-page/explore.dart';
 import 'package:odem/frontend/page/main-page/history.dart';
 import 'package:odem/frontend/page/main-page/library.dart';
 import 'package:odem/frontend/page/main-page/sources.dart';
-
-import '../page/main-page/settings.dart';
+import 'package:odem/frontend/widget/drawer.dart';
 
 class BottomNavigation extends StatefulWidget {
   final int initialPage; 
@@ -21,6 +20,7 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class BottomNavigationState extends State<BottomNavigation> with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late PageController pageController;
   late AnimationController _controller;
   late Animation<Alignment> _beginAnimation;
@@ -28,13 +28,19 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
 
   late List<Widget> topLevelPages;
 
+  void drawerOpen() {
+    setState(() {
+      _scaffoldKey.currentState?.openDrawer();
+    });
+  }
+
   @override
   void initState() {
 
     super.initState();
     pageController = PageController(initialPage: widget.initialPage);
     topLevelPages = _initializeTopLevelPages(); 
-
+  
   }
 
   void onPageChanged(int page) {
@@ -50,20 +56,21 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
 
   List<Widget> _initializeTopLevelPages() {
     return [
-      const Explore(userToken: 'verified'),
+      Explore(userToken: 'verified', drawble: drawerOpen),
       const Library(),
       const History(),
       const Sources(initialPage: 0),
-      const Setting(),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.transparent, 
       body: _mainWrapperBody(),
       bottomNavigationBar: _BottomNavigationBottomNavBar(context),
+      drawer: DrawerWidget()
     );
   }
 
@@ -105,14 +112,7 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
                   svgIcon: '', 
                   page: 3,
                   label: "Sources",
-                ),
-                _bottomAppBarItem(
-                  context,
-                  icon: Icons.settings_outlined,
-                  svgIcon: '', 
-                  page: 4,
-                  label: "Settings",
-                ),
+                )
               ],
             ),
           ),
