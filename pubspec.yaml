@@ -77,7 +77,7 @@ flutter:
   assets:
     - lib/resources/svg/
     - lib/resources/image/
-    - lib/resources/lottie/
+    # - lib/resources/lottie/
     - lib/resources/image/static/
 
   # An image asset can refer to one or more resolution-specific "variants", see
