@@ -10,7 +10,7 @@
 <br><br>
 <h1></h1>
 <div align="center">
-  <br><br>
+  <br>
   <h3>Developers</h3>
   <br><br>
   <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
