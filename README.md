@@ -2,7 +2,6 @@
   <a href="#" style="outline: none; border: none;">
     <img src="images/46db28a5-1e9c-49d1-a0c2-e4ddba96e5a0.png" alt="Image 2" style="width: 30%; max-width: 30%; border: none;" />
   </a>
-  <h1 tabindex="-1" class="heading-element" dir="auto">SafeZone</h1>
 <div>
 
 <br><br>
