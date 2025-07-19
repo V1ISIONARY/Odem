@@ -9,7 +9,9 @@
 </div>
 <br><br>
 <div align="center">
-<h2 style="margin-bottom: 0;">System Methodology</h2>
+<br><br><br>
+<h3>System Methodology</h3>
+<br><br>
                   
 <a href="#" style="outline: none; border: none;">
   <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
