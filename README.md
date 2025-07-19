@@ -8,36 +8,37 @@
   </p>
 </div>
 <br><br>
-<h1></h1>
-<br><br><br>
-<h3>Developers</h3>
-<br><br>
-<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
-  <tr>
-    <td align="center" width="50%">
-      <a href="#" style="outline: none; border: none;">
-        <img src="images/louise.png" alt="Image 1" style="width: 100%; max-width: 100%; border: none;" />
-      </a>
-    </td>
-    <td align="center" width="50%">
-      <a href="#" style="outline: none; border: none;">
-        <img src="images/miro.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <a href="#" style="outline: none; border: none;">
-        <img src="images/solis.png" alt="Image 3" style="width: 100%; max-width: 100%; border: none;" />
-      </a>
-    </td>
-    <td align="center" width="50%">
-      <a href="#" style="outline: none; border: none;">
-        <img src="images/glai.png" alt="Image 4" style="width: 100%; max-width: 100%; border: none;" />
-      </a>
-    </td>
-  </tr>
-</table>
+---
+<div align="center">
+  <br><br><br>
+  <h3>Developers</h3>
+  <br><br>
+  <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+    <tr>
+      <td align="center" width="50%">
+        <a href="#" style="outline: none; border: none;">
+          <img src="images/louise.png" alt="Image 1" style="width: 100%; max-width: 100%; border: none;" />
+        </a>
+      </td>
+      <td align="center" width="50%">
+        <a href="#" style="outline: none; border: none;">
+          <img src="images/miro.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" width="50%">
+        <a href="#" style="outline: none; border: none;">
+          <img src="images/solis.png" alt="Image 3" style="width: 100%; max-width: 100%; border: none;" />
+        </a>
+      </td>
+      <td align="center" width="50%">
+        <a href="#" style="outline: none; border: none;">
+          <img src="images/glai.png" alt="Image 4" style="width: 100%; max-width: 100%; border: none;" />
+        </a>
+      </td>
+    </tr>
+  </table>
 </div>
 <div align="center">
 <br><br>
