@@ -63,25 +63,25 @@ We welcome contributions from the community! Please fork the repository, make yo
 <table width="100%">
   <tr>
     <td align="center" width="50%">
-      <a href="https://imgbb.com/">
-        <img src="https://i.ibb.co/GQ2HD7Xp/39fec834-4b13-41b2-9353-fa0f2dffabdc.png" alt="Image 1" style="width: 100%; max-width: 100%;" />
+      <a href="#">
+        <img src="images/226ec317-7bdb-4614-ad11-2911172be71a.png" alt="Image 1" style="width: 100%; max-width: 100%;" />
       </a>
     </td>
     <td align="center" width="50%">
-      <a href="https://imgbb.com/">
-        <img src="https://i.ibb.co/GQ2HD7Xp/39fec834-4b13-41b2-9353-fa0f2dffabdc.png" alt="Image 2" style="width: 100%; max-width: 100%;" />
+      <a href="#">
+        <img src="images/39fec834-4b13-41b2-9353-fa0f2dffabdc.png" alt="Image 2" style="width: 100%; max-width: 100%;" />
       </a>
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
-      <a href="https://imgbb.com/">
-        <img src="https://i.ibb.co/GQ2HD7Xp/39fec834-4b13-41b2-9353-fa0f2dffabdc.png" alt="Image 3" style="width: 100%; max-width: 100%;" />
+      <a href="#">
+        <img src="images/6785d18f-b0b7-49a7-9f32-84608bfa7fa8.png" alt="Image 3" style="width: 100%; max-width: 100%;" />
       </a>
     </td>
     <td align="center" width="50%">
-      <a href="https://imgbb.com/">
-        <img src="https://i.ibb.co/GQ2HD7Xp/39fec834-4b13-41b2-9353-fa0f2dffabdc.png" alt="Image 4" style="width: 100%; max-width: 100%;" />
+      <a href="#">
+        <img src="images/ac9171ac-3ea0-4944-8118-8668fe0b309a.png" alt="Image 4" style="width: 100%; max-width: 100%;" />
       </a>
     </td>
   </tr>
