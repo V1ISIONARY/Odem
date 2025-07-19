@@ -58,9 +58,10 @@ We welcome contributions from the community! Please fork the repository, make yo
    git push origin feature-name
    ```
 5. Open a pull request in the main repository.
-<div align="center">
+<br><br>
 
-<h2>Developers</h2>
+<div align="center">
+<h2 style="margin-bottom: 0;">Developers</h2>
 
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
@@ -90,7 +91,6 @@ We welcome contributions from the community! Please fork the repository, make yo
 </table>
 </div>
 
-<div align="center" style="margin-top: 50px;">
 
 ### License
 
