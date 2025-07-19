@@ -87,9 +87,10 @@ We welcome contributions from the community! Please fork the repository, make yo
   </tr>
 </table>
 
+<div align="center">
+
 ### License
 
-<div align="center">
 <pre>
 Copyright © 2015 Javier Tomás
 Copyright © 2024 Mihon Open Source Project
@@ -106,4 +107,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 </pre>
+
 </div>
