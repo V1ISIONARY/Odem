@@ -16,7 +16,9 @@
 </a>
 
 <div align="center">
-<h2 style="margin-bottom: 0;">Developers</h2>
+<p style="width: 60%; color: grey; font-size: 12px; max-width: 600px; margin-top: 10px;">
+  Developers.
+</p>
 <br><br>
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
