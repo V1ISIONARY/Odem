@@ -1,4 +1,4 @@
-<div align="center">
+<div align="center" style="width: 60%">
   <a href="#" style="outline: none; border: none;">
     <img src="images/46db28a5-1e9c-49d1-a0c2-e4ddba96e5a0.png" alt="Image 2" style="width: 30%; max-width: 30%; border: none;" />
   </a>
@@ -6,7 +6,6 @@
     Women in the Philippines face safety risks despite legal protections. The SafeZone app helps with real-time tracking, emergency alerts, and safe spaces, empowering quick action in danger.
   </p>
 </div>
-
 
 <br><br>
 
