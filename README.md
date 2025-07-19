@@ -8,7 +8,7 @@
   </p>
 </div>
 <br><br>
----
+--
 <div align="center">
   <br><br><br>
   <h3>Developers</h3>
