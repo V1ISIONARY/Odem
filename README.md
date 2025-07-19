@@ -38,26 +38,7 @@
    ```
 
 ---
-
-## 🧩 Contributions
-
-We welcome contributions from the community! Please fork the repository, make your changes, and submit a pull request.
-
-### Steps to Contribute:
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add your message here"
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a pull request in the main repository.
+---
 <br><br>
 
 <div align="center">
