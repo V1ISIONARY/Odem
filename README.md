@@ -3,8 +3,8 @@
     <img src="images/46db28a5-1e9c-49d1-a0c2-e4ddba96e5a0.png" alt="Image 2" style="width: 30%; max-width: 30%; border: none;" />
   </a>
   <p style="width: 60%; color: grey; font-size: 12px; max-width: 600px; margin-top: 10px;">
-    Women in the Philippines face safety risks despite legal protections. The SafeZone app helps<br>
-    with real-time tracking, emergency alerts, and safe spaces, empowering quick action in danger.
+    Women in the Philippines face safety risks despite legal protections. The SafeZone app helps
+    with real-time <br> tracking, emergency alerts, and safe spaces, empowering quick action in danger.
   </p>
 </div>
 
