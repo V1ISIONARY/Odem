@@ -15,7 +15,7 @@
   <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
 </a>
 <br><br><br>
-<h3>License</h3>
+<h3>Developers</h3>
 <br><br>
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
@@ -48,7 +48,7 @@
 <div align="center" style="margin-top: 50px;">
 
 <h3>License</h3>
-
+<br><br>
 <pre>
 Copyright © 2015 Javier Tomás
 Copyright © 2024 Mihon Open Source Project
