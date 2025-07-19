@@ -62,7 +62,7 @@ We welcome contributions from the community! Please fork the repository, make yo
 
 ## Developers
 
-   <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+   <table width="100%" cellspacing="0" cellpadding="0" style="margin-top: 50px; border-collapse: collapse;">
      <tr>
        <td align="center" width="50%">
          <a href="#" style="outline: none; border: none;">
