@@ -91,8 +91,9 @@ We welcome contributions from the community! Please fork the repository, make yo
 </table>
 </div>
 
+<div align="center" style="margin-top: 50px;">
 
-### License
+<h3>License</h3>
 
 <pre>
 Copyright © 2015 Javier Tomás
