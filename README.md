@@ -9,14 +9,6 @@
 </div>
 <br><br>
 <h1></h1>
-<div align="center">
-<br><br><br>
-<h3>System Methodology</h3>
-<br><br>
-                  
-<a href="#" style="outline: none; border: none;">
-  <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
-</a>
 <br><br><br>
 <h3>Developers</h3>
 <br><br>
@@ -47,6 +39,15 @@
   </tr>
 </table>
 </div>
+<div align="center">
+<br><br>
+<h3>System Methodology</h3>
+<br><br>
+                  
+<a href="#" style="outline: none; border: none;">
+  <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
+</a>
+
 <br><br><br>
 <div align="center" style="margin-top: 50px;">
 
