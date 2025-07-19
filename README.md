@@ -55,7 +55,7 @@
   </table>
 </div>
 
-<br><br><br>
+<br><br>
 <div align="center" style="margin-top: 50px;">
 
 <h3>License</h3>
