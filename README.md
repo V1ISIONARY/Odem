@@ -17,9 +17,9 @@
 <br><br>
 <br><br>
 <div align="center">
-<p style="width: 60%; color: grey; font-size: 60px; max-width: 600px; margin-top: 10px;">
+<h1 style="width: 60%; color: grey; font-size: 60px; max-width: 600px; margin-top: 10px;">
   Developers
-</p>
+</h1>
 <br>
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
