@@ -17,10 +17,11 @@
 <br><br>
 <br><br>
 <div align="center">
-<h1 style="width: 60%; color: grey; font-size: 60px; max-width: 600px; margin-top: 10px;">
-  Developers
-</h1>
-<br>
+  <p style="width: 60%; color: grey; font-size: 60px; font-weight: bold; max-width: 600px; margin-top: 10px; margin-bottom: 0;">
+    Developers
+  </p>
+  <br>
+</div>
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
     <td align="center" width="50%">
