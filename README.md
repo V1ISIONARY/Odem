@@ -58,11 +58,12 @@ We welcome contributions from the community! Please fork the repository, make yo
    git push origin feature-name
    ```
 5. Open a pull request in the main repository.
-<div align="center" style="margin-top: 50px;">
+<div style="height: 50px;"></div>
+<div align="center">
 
 ## Developers
-
-   <table width="100%" cellspacing="0" cellpadding="0" style="margin-top: 50px; border-collapse: collapse;">
+   <div style="height: 50px;"></div>
+   <table width="100%" cellspacing="0" cellpadding="0" style=" border-collapse: collapse;">
      <tr>
        <td align="center" width="50%">
          <a href="#" style="outline: none; border: none;">
