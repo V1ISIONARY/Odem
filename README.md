@@ -62,7 +62,7 @@ We welcome contributions from the community! Please fork the repository, make yo
 
 <div align="center">
 <h2 style="margin-bottom: 0;">System Methodology</h2>
----
+                  
 <a href="#" style="outline: none; border: none;">
   <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
 </a>
