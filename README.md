@@ -19,6 +19,9 @@
 </div>
 <h1></h1>
 
+<a href="#" style="outline: none; border: none;">
+  <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
+</a>
 <div align="center">
   <br>
   <h3 style="font-size: 60px; font-weight: normal; color: grey;">Developers</h3>
@@ -51,15 +54,6 @@
     </tr>
   </table>
 </div>
-
-<div align="center">
-<br><br>
-<h3>System Methodology</h3>
-<br><br>
-                  
-<a href="#" style="outline: none; border: none;">
-  <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
-</a>
 
 <br><br><br>
 <div align="center" style="margin-top: 50px;">
