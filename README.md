@@ -7,9 +7,7 @@
     with real-time <br> tracking, emergency alerts, and safe spaces, empowering quick action in danger.
   </p>
 </div>
-
 <br><br>
-
 <div align="center">
 <h2 style="margin-bottom: 0;">System Methodology</h2>
                   
@@ -19,7 +17,7 @@
 
 <div align="center">
 <h2 style="margin-bottom: 0;">Developers</h2>
-
+<br><br>
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
     <td align="center" width="50%">
