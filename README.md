@@ -14,13 +14,14 @@
 <a href="#" style="outline: none; border: none;">
   <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
 </a>
-<br><br>
+<br><br><br>
 <div align="center">
   <p style="width: 60%; color: grey; font-size: 60px; font-weight: bold; max-width: 600px; margin-top: 10px; margin-bottom: 0;">
     Developers
   </p>
   <br>
 </div>
+<br><br>
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
     <td align="center" width="50%">
@@ -48,7 +49,7 @@
   </tr>
 </table>
 </div>
-
+<br><br><br>
 <div align="center" style="margin-top: 50px;">
 
 <h3>License</h3>
