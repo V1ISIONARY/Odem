@@ -59,7 +59,9 @@ We welcome contributions from the community! Please fork the repository, make yo
    ```
 5. Open a pull request in the main repository.
 <div align="center" style="margin-top: 50px;">
-### Developers
+
+## Developers
+
    <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
      <tr>
        <td align="center" width="50%">
