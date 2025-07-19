@@ -58,37 +58,38 @@ We welcome contributions from the community! Please fork the repository, make yo
    git push origin feature-name
    ```
 5. Open a pull request in the main repository.
-<div style="height: 50px;"></div>
+<br><br><br>
+
 <div align="center">
 
 ## Developers
-   <div style="height: 50px;"></div>
-   <table width="100%" cellspacing="0" cellpadding="0" style=" border-collapse: collapse;">
-     <tr>
-       <td align="center" width="50%">
-         <a href="#" style="outline: none; border: none;">
-           <img src="images/louise.png" alt="Image 1" style="width: 100%; max-width: 100%; border: none;" />
-         </a>
-       </td>
-       <td align="center" width="50%">
-         <a href="#" style="outline: none; border: none;">
-           <img src="images/miro.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
-         </a>
-       </td>
-     </tr>
-     <tr>
-       <td align="center" width="50%">
-         <a href="#" style="outline: none; border: none;">
-           <img src="images/solis.png" alt="Image 3" style="width: 100%; max-width: 100%; border: none;" />
-         </a>
-       </td>
-       <td align="center" width="50%">
-         <a href="#" style="outline: none; border: none;">
-           <img src="images/glai.png" alt="Image 4" style="width: 100%; max-width: 100%; border: none;" />
-         </a>
-       </td>
-     </tr>
-   </table>
+
+<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+  <tr>
+    <td align="center" width="50%">
+      <a href="#" style="outline: none; border: none;">
+        <img src="images/louise.png" alt="Image 1" style="width: 100%; max-width: 100%; border: none;" />
+      </a>
+    </td>
+    <td align="center" width="50%">
+      <a href="#" style="outline: none; border: none;">
+        <img src="images/miro.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="#" style="outline: none; border: none;">
+        <img src="images/solis.png" alt="Image 3" style="width: 100%; max-width: 100%; border: none;" />
+      </a>
+    </td>
+    <td align="center" width="50%">
+      <a href="#" style="outline: none; border: none;">
+        <img src="images/glai.png" alt="Image 4" style="width: 100%; max-width: 100%; border: none;" />
+      </a>
+    </td>
+  </tr>
+</table>
 </div>
 
 <div align="center" style="margin-top: 50px;">
