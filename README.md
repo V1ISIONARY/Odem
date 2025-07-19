@@ -15,12 +15,7 @@
   <img src="images/Screenshot 2025-07-19 232926.png" alt="Image 2" style="width: 100%; max-width: 100%; border: none;" />
 </a>
 <br><br><br>
-<div align="center">
-  <p style="width: 60%; color: grey; font-size: 60px; font-weight: bold; max-width: 600px; margin-top: 10px; margin-bottom: 0;">
-    Developers
-  </p>
-  <br>
-</div>
+<h3>License</h3>
 <br><br>
 <table width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
   <tr>
