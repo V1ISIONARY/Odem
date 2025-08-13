@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-import 'package:odem/backend/model/manga/reco.dart';
+import 'package:odem/backend/model/extension.dart';
+import 'package:odem/backend/model/manga/chapter_detail.dart';
+import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/backend/repositories/manga-repository.dart';
 
 part 'manga_event.dart';
@@ -10,7 +12,17 @@ part 'manga_state.dart';
 class MangaBloc extends Bloc<MangaEvent, MangaState> {
   final MangaRepository repository;
 
-  MangaBloc(this.repository) : super(LoadingOdem()) {
+  MangaBloc(this.repository) : super(OdemInitial()) {
+
+    on<LoadExtensions>((event, emit) async {
+      emit(ExtensionLoading());
+      try {
+        final extensions = await repository.fetchExtensions();
+        emit(ExtensionLoaded(extensions));
+      } catch (e) {
+        emit(ExtensionError(e.toString()));
+      }
+    });
 
     on<LoadOdem>((event, emit) async {
       emit(LoadingOdem());
@@ -19,6 +31,26 @@ class MangaBloc extends Bloc<MangaEvent, MangaState> {
         emit(FetchReco(recommendManga));
       } catch (e) {
         emit(ErrorOdem("Failed to fetch recommendation list"));
+      }
+    });
+
+    on<InstallExtension>((event, emit) async {
+      emit(ExtensionInstalling());
+      try {
+        final recommendManga = await repository.InstallExtension(event.source);
+        emit(ExtensionInstalled(recommendManga));
+      } catch (e) {
+        emit(ErrorOdem("Failed to install extension"));
+      }
+    });
+
+    on<FetchMangaImages>((event, emit) async {
+      emit(LoadingMangaImage());
+      try {
+        final images = await repository.fetchMangaImages(event.seriesPath);
+        emit(MangaImageLoaded(images));
+      } catch (e) {
+        emit(ErrorOdem(e.toString()));
       }
     });
 

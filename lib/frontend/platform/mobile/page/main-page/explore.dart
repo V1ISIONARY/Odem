@@ -19,7 +19,9 @@ class Explore extends StatefulWidget {
   State<Explore> createState() => _ExploreState();
 }
 
-class _ExploreState extends State<Explore> with TickerProviderStateMixin {
+class _ExploreState extends State<Explore> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   final GlobalKey<BottomNavigationState> drawerOpen = GlobalKey<BottomNavigationState>();
   late AnimationController _controller;
@@ -143,8 +145,8 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final localProperties = LocalProperties();
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -187,87 +189,88 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin {
                       height: 30,
                       child: Stack(
                         children: [
-                        Positioned.fill(
-                          child: TextField(
-                            controller: _textEditingController,
-                            focusNode: _focusNode,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.black,
-                              hintText: '', 
-                              hintStyle: TextStyle(
-                                color: Colors.transparent, 
+                          Positioned.fill(
+                            child: TextField(
+                              controller: _textEditingController,
+                              cursorColor: Colors.white,
+                              focusNode: _focusNode,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
                               ),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0), // Padding adjustment
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                                borderSide: BorderSide(color: Colors.white),
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.black,
+                                hintText: '', 
+                                hintStyle: TextStyle(
+                                  color: Colors.transparent, 
+                                ),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          top: 6.3,
-                          left: 12, 
-                          right: 12,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  FocusScope.of(context).requestFocus(_focusNode);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 4),
+                          Positioned(
+                            top: 6.3,
+                            left: 12, 
+                            right: 12,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: (){
+                                    FocusScope.of(context).requestFocus(_focusNode);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(right: 4),
+                                    child: AnimatedBuilder(
+                                      animation: _controllerFade, 
+                                      builder: (context, child) {
+                                        return Text(
+                                          "Search for",
+                                          style: TextStyle(
+                                            color: _colorAnimation.value, 
+                                            fontSize: 13,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SlideTransition(
+                                  position: _hintAnimation,
                                   child: AnimatedBuilder(
-                                    animation: _controllerFade, 
+                                    animation: _hintColorAnimation,
                                     builder: (context, child) {
-                                      return Text(
-                                        "Search for",
-                                        style: TextStyle(
-                                          color: _colorAnimation.value, 
-                                          fontSize: 13,
+                                      return GestureDetector(
+                                        onTap: () {
+                                          FocusScope.of(context).requestFocus(_focusNode);
+                                        },
+                                        child: Text(
+                                          hints[_currentHintIndex],
+                                          style: TextStyle(
+                                            color: _hintColorAnimation.value, 
+                                            fontSize: 13,
+                                          ),
                                         ),
                                       );
                                     },
                                   ),
-                                ),
-                              ),
-                              SlideTransition(
-                                position: _hintAnimation,
-                                child: AnimatedBuilder(
-                                  animation: _hintColorAnimation,
-                                  builder: (context, child) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        FocusScope.of(context).requestFocus(_focusNode);
-                                      },
-                                      child: Text(
-                                        hints[_currentHintIndex],
-                                        style: TextStyle(
-                                          color: _hintColorAnimation.value, 
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            ],
+                                )
+                              ],
+                            ),
                           ),
-                        ),
                         ],
                       ),
                     ),
@@ -277,7 +280,9 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin {
               Padding(
                 padding: EdgeInsets.only(left: 5),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    // localProperties.onSearchPage.value = !localProperties.onSearchPage.value;
+                  },
                   child: Transform.translate(
                     offset: Offset(3, 0),
                     child: Container(
@@ -298,70 +303,85 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin {
           ),
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.transparent,
-        child: widget.userToken == 'verified'
-          ? ValueListenableBuilder(
-              valueListenable: localProperties.recommendManga,
-              builder: (context, recommendList, _) {
-                return ListView(
-                  children: [
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        double screenWidth = constraints.maxWidth;
-                        int crossAxisCount = (screenWidth / 150).floor();
-                        return GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: crossAxisCount,
-                            mainAxisSpacing: 5,
-                            crossAxisSpacing: 5,
-                            childAspectRatio: 100 / 200,
+      body: ValueListenableBuilder<bool>(
+        valueListenable: localProperties.onSearchPage,
+        builder: (context, onSearchPage, child) {
+          return onSearchPage
+            ? Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.black,
+              )
+            : Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.transparent,
+              child: widget.userToken == 'verified'
+                ? ValueListenableBuilder(
+                    valueListenable: localProperties.recommendManga,
+                    builder: (context, recommendList, _) {
+                      return ListView(
+                        children: [
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              double screenWidth = constraints.maxWidth;
+                              int crossAxisCount = (screenWidth / 150).floor();
+                              if (crossAxisCount < 1) crossAxisCount = 1;
+                              int itemCount = recommendList.length;
+                              if (itemCount % crossAxisCount == 1) {
+                                itemCount -= 1;
+                              }
+                              return GridView.builder(
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: crossAxisCount,
+                                  mainAxisSpacing: 5,
+                                  crossAxisSpacing: 5,
+                                  childAspectRatio: 100 / 200,
+                                ),
+                                itemCount: itemCount,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                itemBuilder: (_, index) {
+                                  final manga = recommendList[index];
+                                  return GridTile(
+                                    child: SingleCard(
+                                      zipdata: manga,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
-                          itemCount: recommendList.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          itemBuilder: (_, index) {
-                            final manga = recommendList[index];
-                            return GridTile(
-                              child: SingleCard(
-                                zipdata: manga
-                              ),
-                            );
-                          },
-                        );
-                      },
+                        ],
+                      );
+                    },
+                  )
+                : Center(
+                    child: Container(
+                      height: 100,
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            color: Colors.white10,
+                            margin: EdgeInsets.only(bottom: 10)
+                          ),
+                          ContentTitle(title: 'Empty Data'),
+                          ContentDescrip(
+                            description: "you're required to import the resources from\nour official website.",
+                            alignment: 'center',
+                          )
+                        ],
+                      ),
                     ),
-                  ],
-                );
-              },
-            )
-          : Center(
-              child: Container(
-                height: 100,
-                color: Colors.transparent,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                        height: 50,
-                        width: 50,
-                        color: Colors.white10,
-                        margin: EdgeInsets.only(bottom: 10)),
-                    ContentTitle(title: 'Empty Data'),
-                    ContentDescrip(
-                      description:
-                          "you're required to import the resources from\nour official website.",
-                      alignment: 'center',
-                    )
-                  ],
-                ),
-              ),
-            ),
-      ),
-
+                  ),
+          );
+        }
+      )
     );
   }
 }

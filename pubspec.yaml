@@ -34,9 +34,11 @@ dependencies:
   equatable: ^2.0.5
   flutter_bloc: ^8.1.6
   flutter_svg: ^2.0.14
+  flutter_dotenv: ^5.0.2
   page_transition: ^2.0.5
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.2
+  visibility_detector: ^0.3.0
   flutter_launcher_icons: ^0.14.3
 
 flutter_launcher_icons:
@@ -80,6 +82,7 @@ flutter:
     - lib/resources/image/
     # - lib/resources/lottie/
     - lib/resources/image/static/
+    - lib/backend/security/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

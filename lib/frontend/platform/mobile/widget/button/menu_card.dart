@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/menu-content/category.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/menu-content/download.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/menu-content/help.dart';

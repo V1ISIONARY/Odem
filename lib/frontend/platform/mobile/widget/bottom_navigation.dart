@@ -87,8 +87,8 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
               children: [
                 _bottomAppBarItem(
                   context,
-                  icon: Icons.home,
-                  svgIcon: 'lib/resources/svg/explore.svg',
+                  icon: Icons.travel_explore_outlined,
+                  svgIcon: '',
                   page: 0,
                   label: "Explore",
                 ),
@@ -150,6 +150,11 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
   }) {
     return GestureDetector(
       onTap: () {
+        // pageController.animateToPage(
+        //   page,
+        //   duration: const Duration(milliseconds: 300),
+        //   curve: Curves.easeInOut,
+        // );
         pageController.jumpToPage(page);
         onPageChanged(page);
       },
@@ -162,16 +167,16 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
               return Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: svgIcon.isNotEmpty
-                    ? SvgPicture.asset(
-                        svgIcon,
-                        height: iconSize,
-                        color: isSelected ? Colors.white : Colors.grey,
-                      )
-                    : Icon(
-                        icon,
-                        size: iconSize,
-                        color: isSelected ? Colors.white : Colors.grey,
-                      ),
+                  ? SvgPicture.asset(
+                      svgIcon,
+                      height: iconSize,
+                      color: isSelected ? Colors.white : Colors.grey,
+                    )
+                  : Icon(
+                      icon,
+                      size: iconSize,
+                      color: isSelected ? Colors.white : Colors.grey,
+                    ),
               );
             },
           ),

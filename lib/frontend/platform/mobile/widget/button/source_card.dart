@@ -1,26 +1,20 @@
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:odem/backend/model/extension.dart';
 import '../schema/text_format.dart';
 
 class SourceCard extends StatelessWidget {
-  final String? age, language, navigateTo1, navigateTo2;
+  final Extension? extension;
+  final String? sourceTitle;
   final bool within;
-  final String sourceTitle, title, version, thumbnail, navigateTo;
-  final IconData? icon1, icon2;
+  final List<Widget>? action; // dynamic list of widgets for trailing actions
+
   const SourceCard({
     super.key,
-    this.age,
-    this.language,
+    this.extension,
+    this.sourceTitle,
     required this.within,
-    required this.sourceTitle,
-    required this.title,
-    required this.version,
-    required this.thumbnail,
-    required this.navigateTo,
-    this.icon1,
-    this.icon2,
-    this.navigateTo1,
-    this.navigateTo2,
+    this.action,
   });
 
   @override
@@ -28,66 +22,78 @@ class SourceCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        within == true
-          ? Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10, left: 15),
-              child: ContentTitle(title: sourceTitle)
-            )
-          : Container(),
+        if (within)
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 15),
+            child: ContentTitle(title: sourceTitle ?? ''),
+          ),
         Container(
           height: 50,
           width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          margin: EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          margin: const EdgeInsets.only(bottom: 10),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: Image.network(
-                          thumbnail,
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Image.asset(
-                            'lib/resources/image/static/solo.png',
-                            fit: BoxFit.cover,
-                            color: Colors.white,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Builder(
+                            builder: (context) {
+                              String imageUrl = '';
+                              if (extension?.logoImg.isNotEmpty ?? false) {
+                                if (kIsWeb) {
+                                  imageUrl = 'https://images.weserv.nl/?url=' +
+                                      Uri.encodeComponent(
+                                          extension!.logoImg.replaceFirst('https://', ''));
+                                } else {
+                                  imageUrl = extension!.logoImg;
+                                }
+                              }
+                              return Image.network(
+                                imageUrl,
+                                width: 30,
+                                height: 30,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Image.asset(
+                                  'lib/resources/image/static/solo.png',
+                                  fit: BoxFit.cover,
+                                  color: Colors.white,
+                                ),
+                              );
+                            },
                           ),
                         ),
-                      ),
-                      SizedBox(width: 15),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ContentTitle(title: title),
-                          ContentDescrip(description: '$language ⋅ $version'),
-                        ],
-                      ),
-                      Spacer(),
-                    ],
+                        const SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ContentTitle(title: extension?.exName ?? ''),
+                            ContentDescrip(description: '${extension?.language ?? ''} ⋅ ${extension?.version ?? ''}'),
+                          ],
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              Row(
-                children: [icon1, icon2].where((icon) => icon != null).map((icon) => GestureDetector(
-                  child: Container(
-                    width: 50,
-                    child: Center(
-                      child: Icon(icon, color: Colors.white, size: 20),
-                    ),
-                  ),
-                )).toList(),
-              ),
+              if (action != null)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: action!,
+                ),
             ],
           ),
-        )
-      ]
+        ),
+      ],
     );
   }
 }

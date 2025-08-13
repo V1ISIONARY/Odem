@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:odem/backend/architecture/cubic/widget/sources_pages.dart';
+import 'package:odem/backend/architecture/cubic/widget/sources_pages.dart'; // must export sourcePage cubit
 import 'package:odem/frontend/platform/mobile/page/main-page/source-content/extension.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/source-content/migrate.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/source-content/roots.dart';
@@ -30,7 +30,7 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
     pageController = PageController(initialPage: widget.initialPage);
     topLevelPages = [
       Roots(),
-      Extension(),
+      ExtensionPage(),
       Migrate(),
     ];
 
@@ -49,12 +49,16 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
       TweenSequenceItem(tween: Tween(begin: -10.0, end: 10.0), weight: 1),
       TweenSequenceItem(tween: Tween(begin: 10.0, end: 0.0), weight: 1),
     ]).animate(_controller);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<sourcePage>();
+      cubit.changeSelectedIndex(widget.initialPage);
+    });
   }
 
   void onPageChanged(int page) {
     if (mounted) {
-      BlocProvider.of<sourcePage>(context, listen: false)
-          .changeSelectedIndex(page);
+      context.read<sourcePage>().changeSelectedIndex(page);
     }
   }
 
@@ -64,10 +68,6 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
       onPageChanged: onPageChanged,
       children: topLevelPages,
     );
-  }
-
-  void _startShake() {
-    _controller.forward();
   }
 
   @override
@@ -96,7 +96,11 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          pageController.jumpToPage(page);
+          pageController.animateToPage(
+            page,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
           onPageChanged(page);
         },
         child: Padding(
@@ -106,34 +110,37 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
               final isSelected = selectedIndex == page;
               return Column(
                 children: [
-                  Text(
-                    indicator,
+                  AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 300),
                     style: TextStyle(
                       fontSize: 10,
                       color: isSelected ? Colors.white : Colors.white38,
                     ),
+                    child: Text(indicator),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10),
-                    child: Container(
-                      height: 4,
-                      width: double.infinity,
-                      child: Center(
-                        child: Container(
-                          width: double.infinity,
+                  const SizedBox(height: 10),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    height: 4,
+                    width: double.infinity,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
                           height: 0.3,
+                          width: double.infinity,
                           color: Colors.white30,
-                          child: isSelected
-                            ? Container(
-                                width: double.infinity,
-                                height: 5.0,
-                                color: Colors.white,
-                              )
-                            : SizedBox(),
                         ),
-                      ),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          height: isSelected ? 1 : 0,
+                          width: double.infinity,
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
-                  )
+                  ),
                 ],
               );
             },
@@ -151,28 +158,28 @@ class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         centerTitle: false,
-        title: Text(
+        title: const Text(
           'Sources',
           style: TextStyle(fontSize: 15, color: Colors.white),
         ),
         actions: [
           Container(
             width: 100,
-            margin: EdgeInsets.only(right: 10),
+            margin: const EdgeInsets.only(right: 10),
             color: Colors.transparent,
             child: Row(
               children: [
                 Expanded(
                   child: GestureDetector(
                     onTap: () {},
-                    child: Icon(Icons.travel_explore_outlined,
+                    child: const Icon(Icons.travel_explore_outlined,
                         color: Colors.white, size: 20),
                   ),
                 ),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {},
-                    child: Icon(Icons.language, color: Colors.white, size: 20),
+                    child: const Icon(Icons.language, color: Colors.white, size: 20),
                   ),
                 )
               ],
