@@ -10,8 +10,7 @@ class Roots extends StatefulWidget {
   State<Roots> createState() => _RootsState();
 }
 
-class _RootsState extends State<Roots>
-    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+class _RootsState extends State<Roots> with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -22,6 +21,7 @@ class _RootsState extends State<Roots>
   @override
   void initState() {
     super.initState();
+
     _rotationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),

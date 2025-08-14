@@ -4,7 +4,6 @@ class RecoModel {
   final String mangaid;
   final String title;
   final String status;
-  final double rating;
   final int volume_count;
   final String main_image;
   final String cover_image;
@@ -15,7 +14,8 @@ class RecoModel {
   final List<String> authors;
   final List<String> artists;
 
-  final List<ChapterDetail> chapterdetails;
+  double rating;
+  List<ChapterDetail> chapterdetails;
 
   RecoModel({
     required this.title,

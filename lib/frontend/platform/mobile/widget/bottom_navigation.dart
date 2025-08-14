@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:odem/backend/architecture/cubic/widget/main_page.dart';
+import 'package:odem/backend/properties/local_properties.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/explore.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/history.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/library.dart';
@@ -21,6 +22,7 @@ class BottomNavigation extends StatefulWidget {
 
 class BottomNavigationState extends State<BottomNavigation> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final localProperties = LocalProperties();
   late PageController pageController;
   late AnimationController _controller;
   late Animation<Alignment> _beginAnimation;
@@ -36,11 +38,9 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
 
   @override
   void initState() {
-
     super.initState();
     pageController = PageController(initialPage: widget.initialPage);
     topLevelPages = _initializeTopLevelPages(); 
-  
   }
 
   void onPageChanged(int page) {
@@ -49,7 +49,6 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
 
   @override
   void dispose() {
-    // _controller.dispose();
     pageController.dispose();
     super.dispose();
   }
@@ -57,7 +56,7 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
   List<Widget> _initializeTopLevelPages() {
     return [
       Explore(userToken: 'verified', drawble: drawerOpen),
-      const Library(),
+      const Library(userToken: 'verified'),
       const History(),
       const Sources(initialPage: 0),
     ];
@@ -85,12 +84,24 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _bottomAppBarItem(
-                  context,
-                  icon: Icons.travel_explore_outlined,
-                  svgIcon: '',
-                  page: 0,
-                  label: "Explore",
+                ValueListenableBuilder<bool>(
+                  valueListenable: localProperties.onSearchPage,
+                  builder: (context, onSearchPage, child) {
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                      child: _bottomAppBarItem(
+                        key: ValueKey<bool>(onSearchPage),
+                        context,
+                        icon: onSearchPage ? Icons.search : Icons.travel_explore_outlined,
+                        svgIcon: '',
+                        page: 0,
+                        label: onSearchPage ? "Search" : "Explore",
+                      ),
+                    );
+                  },
                 ),
                 _bottomAppBarItem(
                   context,
@@ -121,7 +132,6 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
     );
   }
 
-
   PageView _BottomNavigationBody() {
     return PageView(
       onPageChanged: (int page) => onPageChanged(page),
@@ -147,14 +157,11 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
     required String svgIcon,
     required int page,
     required String label,
+    Key? key,
   }) {
     return GestureDetector(
+      key: key,
       onTap: () {
-        // pageController.animateToPage(
-        //   page,
-        //   duration: const Duration(milliseconds: 300),
-        //   curve: Curves.easeInOut,
-        // );
         pageController.jumpToPage(page);
         onPageChanged(page);
       },
@@ -194,5 +201,4 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
       ),
     );
   }
-
 }

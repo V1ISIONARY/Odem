@@ -34,11 +34,25 @@ class MangaBloc extends Bloc<MangaEvent, MangaState> {
       }
     });
 
+    on<LoadSearch>((event, emit) async {
+      emit(LoadingSearch());
+      try {
+        final searchingManga = await repository.searchManga(
+          event.title, 
+          event.extKey,
+          event.isSearch
+        );
+        emit(FetchSearch(searchingManga));
+      } catch (e) {
+        emit(ErrorOdem("Failed to fetch recommendation list"));
+      }
+    });
+
     on<InstallExtension>((event, emit) async {
       emit(ExtensionInstalling());
       try {
-        final recommendManga = await repository.InstallExtension(event.source);
-        emit(ExtensionInstalled(recommendManga));
+        final installingExt = await repository.InstallExtension(event.source, event.fromExt);
+        emit(ExtensionInstalled(installingExt));
       } catch (e) {
         emit(ErrorOdem("Failed to install extension"));
       }

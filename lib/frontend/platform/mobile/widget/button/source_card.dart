@@ -29,6 +29,7 @@ class SourceCard extends StatelessWidget {
           ),
         Container(
           height: 50,
+          color: Colors.black,
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 15),
           margin: const EdgeInsets.only(bottom: 10),
@@ -39,7 +40,6 @@ class SourceCard extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   child: Container(
-                    color: Colors.transparent,
                     child: Row(
                       children: [
                         ClipRRect(

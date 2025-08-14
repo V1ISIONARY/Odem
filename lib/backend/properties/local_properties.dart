@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:odem/backend/model/extension.dart';
 import 'package:odem/backend/model/manga/chapter_detail.dart';
@@ -12,16 +14,17 @@ class LocalProperties extends ChangeNotifier {
 
   final recommendManga = ValueNotifier<List<RecoModel>>([]);
   final mangaImg = ValueNotifier<List<MangaImgModel>>([]);
-  final mangaRoot = ValueNotifier<String>("");
   final selectedRootIndex = ValueNotifier<int?>(null);
+  final mangaRoot = ValueNotifier<String>("");
 
   final installedExtension = ValueNotifier<List<Extension>>([]);
   final migrateExtension = ValueNotifier<List<Extension>>([]);
   final rootsExtension = ValueNotifier<List<Extension>>([]);
   final extensions = ValueNotifier<List<Extension>>([]);
-  final migrationData = ValueNotifier<Map<String, List<RecoModel>>>({});
-
   final onSearchPage = ValueNotifier<bool>(false);
+
+  final searchManga = ValueNotifier<Map<String, Map<String, List<RecoModel>>>>({});
+  final migrationData = ValueNotifier<Map<String, List<RecoModel>>>({});
 
   Future<void> syncData() async {
     await _syncIfEmpty(installedExtension, DataSync.loadInstalledExtension, post: (list) {
@@ -30,9 +33,10 @@ class LocalProperties extends ChangeNotifier {
     });
     await _syncIfEmpty(migrateExtension, () async => installedExtension.value);
     await _syncIfEmpty(rootsExtension, () async => installedExtension.value);
-    await _syncIfEmpty(migrationData, DataSync.loadMigrationData);
     await _syncIfEmpty(recommendManga, DataSync.loadRecommendedManga);
+    await _syncIfEmpty(migrationData, DataSync.loadMigrationData);
     await _syncIfEmpty(extensions, DataSync.loadExtensions);
+    await loadSavedSearchManga();
     await loadSavedMangaRoot();
     notifyListeners();
   }
@@ -64,6 +68,33 @@ class LocalProperties extends ChangeNotifier {
     );
     if (idx != -1) {
       await _setMangaRoot(savedKey, idx);
+    }
+  }
+
+  Future<void> loadSavedSearchManga() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final stored = prefs.getString('searchManga');
+      if (stored == null || stored.isEmpty) return;
+
+      final Map<String, dynamic> raw = json.decode(stored);
+
+      final Map<String, Map<String, List<RecoModel>>> parsed =
+          raw.map((source, lists) {
+        final m = (lists as Map<String, dynamic>);
+        final def = (m['default'] as List? ?? const [])
+            .map((e) => RecoModel.fromJson(e))
+            .toList();
+
+        return MapEntry(source, {
+          'default': def,
+          'search': <RecoModel>[], 
+        });
+      });
+
+      searchManga.value = parsed;
+    } catch (e) {
+      print("Error loading searchManga from prefs: $e");
     }
   }
 

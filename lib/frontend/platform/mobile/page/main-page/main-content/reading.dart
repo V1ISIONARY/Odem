@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:odem/backend/model/manga/chapter_detail.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/backend/properties/local_properties.dart';
-import 'package:odem/frontend/platform/mobile/widget/design/category_compo.dart';
-import 'package:odem/frontend/platform/mobile/widget/schema/color.dart';
 import 'package:odem/frontend/platform/mobile/widget/schema/text_format.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -32,7 +30,10 @@ class _ReadingState extends State<Reading> {
   double _currentPageProgress = 0;
   bool _hasShownLoader = false;
   bool _imagesLoaded = false;
-  int _loadedImagesCount = 0;
+
+  // Track loaded image indexes to avoid double counting
+  final Set<int> _loadedImageIndexes = {};
+
   bool _isScrolled = false;
 
   @override
@@ -75,7 +76,7 @@ class _ReadingState extends State<Reading> {
 
   String getWeservUrl(String originalUrl) {
     final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
-    final parts = noProtocol.split('/'); 
+    final parts = noProtocol.split('/');
     final domain = parts.first;
     final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
     return 'https://images.weserv.nl/?url=$domain/$pathSegments';
@@ -106,7 +107,7 @@ class _ReadingState extends State<Reading> {
                             _updateCurrentPageProgress();
                           },
                           child: GestureDetector(
-                            behavior: HitTestBehavior.opaque, 
+                            behavior: HitTestBehavior.opaque,
                             onTap: () {
                               setState(() => _showFullScreenLoader = !_showFullScreenLoader);
                             },
@@ -117,25 +118,36 @@ class _ReadingState extends State<Reading> {
                                 fit: BoxFit.cover,
                                 loadingBuilder: (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
-                                    _loadedImagesCount++;
-                                    if (!_imagesLoaded && _loadedImagesCount == images.length) {
-                                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                                        setState(() {
-                                          _imagesLoaded = true;
-                                          Future.delayed(const Duration(seconds: 10), () {
-                                            if (mounted) { 
-                                              setState(() {
-                                                _showFullScreenLoader = false;
-                                                _hasShownLoader = true;
+                                    if (!_loadedImageIndexes.contains(index)) {
+                                      _loadedImageIndexes.add(index);
+                                      if (!_imagesLoaded && _loadedImageIndexes.length == images.length) {
+                                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                                          if (mounted) {
+                                            setState(() {
+                                              _imagesLoaded = true;
+                                              Future.delayed(const Duration(seconds: 5), () {
+                                                if (mounted) {
+                                                  setState(() {
+                                                    _showFullScreenLoader = false;
+                                                    _hasShownLoader = true;
+                                                  });
+                                                }
                                               });
-                                            }
-                                          });
-                                       });
-                                      });
+                                            });
+                                          }
+                                        });
+                                      }
                                     }
                                     return child;
                                   }
-                                  return child;
+                                  return const SizedBox(
+                                    height: 200,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
                                 },
                                 errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
                               ),
@@ -155,7 +167,7 @@ class _ReadingState extends State<Reading> {
                     color: Colors.black12,
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Center(
+                      child: const Center(
                         child: CircularProgressIndicator(color: Colors.white),
                       ),
                     ),
@@ -215,20 +227,20 @@ class _ReadingState extends State<Reading> {
                                         Expanded(
                                           child: ContentTitle(
                                             title: isSpecialChapter
-                                              ? "${widget.maindata!.title}"
-                                                "${_hasShownLoader ? "  •  Page ${_currentPageProgress.toStringAsFixed(0)}/${images.length} "
-                                                "(${((_currentPageProgress / images.length) * 100).toStringAsFixed(0)}%)" : ""}"
-                                              : widget.maindata!.title,
+                                                ? "${widget.maindata!.title}"
+                                                    "${_hasShownLoader ? "  •  Page ${_currentPageProgress.toStringAsFixed(0)}/${images.length} "
+                                                        "(${((_currentPageProgress / images.length) * 100).toStringAsFixed(0)}%)" : ""}"
+                                                : widget.maindata!.title,
                                           ),
                                         ),
                                       ],
                                     ),
                                     ContentDescrip(
                                       description: isSpecialChapter
-                                        ? widget.extracted!.chapter
-                                        : "${widget.extracted!.chapter}"
-                                          "${_hasShownLoader ? " - Page ${_currentPageProgress.toStringAsFixed(0)} of ${images.length} "
-                                          "(${((_currentPageProgress / images.length) * 100).toStringAsFixed(0)}%)" : ""}",
+                                          ? widget.extracted!.chapter
+                                          : "${widget.extracted!.chapter}"
+                                              "${_hasShownLoader ? " - Page ${_currentPageProgress.toStringAsFixed(0)} of ${images.length} "
+                                                  "(${((_currentPageProgress / images.length) * 100).toStringAsFixed(0)}%)" : ""}",
                                     ),
                                   ],
                                 ),

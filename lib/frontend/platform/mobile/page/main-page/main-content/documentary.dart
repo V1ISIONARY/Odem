@@ -3,11 +3,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/frontend/platform/mobile/widget/button/icon_card.dart';
 import 'package:odem/frontend/platform/mobile/widget/design/fade.dart';
-import 'package:odem/frontend/platform/mobile/widget/schema/color.dart';
 import 'package:odem/frontend/platform/mobile/widget/schema/text_format.dart';
 
 import '../../../widget/design/category_compo.dart';
@@ -166,8 +164,8 @@ class _DocumentaryState extends State<Documentary> {
                                   margin: EdgeInsets.only(right: 5),
                                   decoration: BoxDecoration(
                                     color: widget.extracted!.status == "ongoing"
-                                        ? Colors.white30
-                                        : Colors.lightGreen,
+                                      ? Colors.white30
+                                      : Colors.lightGreen,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -223,9 +221,9 @@ class _DocumentaryState extends State<Documentary> {
                   return Theme(
                     data: Theme.of(context).copyWith(
                       popupMenuTheme: PopupMenuThemeData(
-                        color: Colors.grey[900], // Background color of the menu
+                        color: Colors.grey[900],
                         textStyle: TextStyle(
-                          color: Colors.white,    // Text color of menu items
+                          color: Colors.white,
                           fontSize: 14,
                         ),
                         shape: RoundedRectangleBorder(
@@ -538,24 +536,37 @@ class _DocumentaryState extends State<Documentary> {
                               chapters.length + 1,
                               (index) {
                                 if (index == 6) {
-                                  final adImageUrl = 'https://images.weserv.nl/?url=' + Uri.encodeComponent('https://www.vistarmedia.com/hubfs/McDonalds%20DOOH%20ad%20billboard-1.jpg');
-                                  return SizedBox.shrink();
-                                  // Container(
-                                  //   height: 40,
-                                  //   width: double.infinity,
-                                  //   margin: const EdgeInsets.only(bottom: 10),
-                                  //   alignment: Alignment.center,
-                                  //   child: ClipRect(
-                                  //     child: SizedBox.expand(
-                                  //       child: Image.network(
-                                  //         adImageUrl,
-                                  //         fit: BoxFit.cover,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // );
+                                  if (chapters.length >= 6) {
+                                    // final adImageUrl = 'https://images.weserv.nl/?url=' + Uri.encodeComponent('https://www.vistarmedia.com/hubfs/McDonalds%20DOOH%20ad%20billboard-1.jpg');
+                                    return SizedBox.shrink();
+                                    // Container(
+                                    //   height: 40,
+                                    //   width: double.infinity,
+                                    //   margin: const EdgeInsets.only(bottom: 10),
+                                    //   alignment: Alignment.center,
+                                    //   child: ClipRect(
+                                    //     child: SizedBox.expand(
+                                    //       child: Image.network(
+                                    //         adImageUrl,
+                                    //         fit: BoxFit.cover,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // );
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
                                 } else {
-                                  final dataIndex = index > 2 ? index - 1 : index;
+                                  // Calculate data index properly
+                                  // If index > 6, dataIndex = index - 1 (because of ad)
+                                  // If index < 6, dataIndex = index
+                                  int dataIndex = index > 6 ? index - 1 : index;
+
+                                  // Protect from out-of-range access:
+                                  if (dataIndex < 0 || dataIndex >= chapters.length) {
+                                    return SizedBox.shrink();
+                                  }
+
                                   final chapterDetail = chapters[dataIndex];
                                   return ChapterCard(
                                     page: 0,
@@ -566,6 +577,7 @@ class _DocumentaryState extends State<Documentary> {
                               },
                             ),
                           )
+
                         ]
                       )
                     )

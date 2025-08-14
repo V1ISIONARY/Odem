@@ -34,6 +34,13 @@ class FetchReco extends MangaState {
   List<Object?> get props => [recommendManga];
 }
 
+class FetchSearch extends MangaState {
+  final List<RecoModel> recommendManga;
+  const FetchSearch(this.recommendManga);
+  @override
+  List<Object?> get props => [recommendManga];
+}
+
 class LoadingMangaImage extends MangaState {
   const LoadingMangaImage();
 }
@@ -46,6 +53,10 @@ class MangaImageLoaded extends MangaState {
 
 class LoadingOdem extends MangaState {
   const LoadingOdem();
+}
+
+class LoadingSearch extends MangaState {
+  const LoadingSearch();
 }
 
 class ErrorOdem extends MangaState {

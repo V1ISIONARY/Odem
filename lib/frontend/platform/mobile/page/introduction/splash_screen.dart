@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odem/backend/architecture/bloc/manga/manga_bloc.dart';
-import 'package:odem/backend/model/manga/recommend.dart';
+import 'package:odem/backend/model/extension.dart';
 import 'package:odem/backend/properties/local_properties.dart';
-import 'package:odem/frontend/platform/mobile/widget/schema/color.dart';
 import 'package:odem/resources/schema.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../widget/bottom_navigation.dart';
 
@@ -16,8 +14,8 @@ class Splash extends StatefulWidget {
   @override
   State<Splash> createState() => _SplashState();
 }
-class _SplashState extends State<Splash> {
 
+class _SplashState extends State<Splash> {
   final localProperties = LocalProperties();
   bool _isNavigating = false;
   bool _hasTriggeredLoad = false;
@@ -26,35 +24,56 @@ class _SplashState extends State<Splash> {
   void initState() {
     super.initState();
     _initSplash();
+    _waitForInstalledExtension();
+  }
+
+  Future<void> _waitForInstalledExtension() async {
+    while (localProperties.installedExtension.value.isEmpty) {
+      await Future.delayed(const Duration(milliseconds: 50));
+    }
+    if (localProperties.installedExtension.value.length == 1) {
+      await localProperties.setMangaRootByIndex(0);
+    }
   }
 
   Future<void> _initSplash() async {
     await localProperties.syncData();
-    if (localProperties.recommendManga.value.isNotEmpty) {
+
+    localProperties.searchManga.addListener(() {
+      if (!mounted) return;
+      final searchMap = localProperties.searchManga.value;
+        searchMap.forEach((sourceKey, innerMap) {
+          print('Source: $sourceKey');
+          innerMap.forEach((listType, list) {
+            print('  $listType: ${list.length} items');
+            for (var item in list.take(10)) { 
+              print('   - ${item.title}');
+            }
+          });
+        });
+    });
+
+    if (localProperties.extensions.value.isNotEmpty) {
       _navigateToMainWrapper(skipBloc: true);
-      return; 
+      return;
     }
     _hasTriggeredLoad = true;
-    context.read<MangaBloc>().add(LoadOdem());
+    context.read<MangaBloc>().add(LoadExtensions());
     _startNavigationTimer();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<RecoModel>>(
-      valueListenable: localProperties.recommendManga,
-      builder: (context, recommendedList, _) {
+    return ValueListenableBuilder<List<Extension>>(
+      valueListenable: localProperties.extensions,
+      builder: (context, extensionsList, _) {
         return BlocListener<MangaBloc, MangaState>(
           listener: (context, state) {
-            if (state is FetchReco && !_isNavigating) {
+            if (state is ExtensionLoaded && !_isNavigating) {
               _navigateToMainWrapper();
-              context.read<MangaBloc>().add(LoadExtensions());
-            } else if (state is ErrorOdem) {
+            } else if (state is ErrorOdem && !_isNavigating) {
               debugPrint("Error: ${state.response}");
-              context.read<MangaBloc>().add(LoadExtensions());
-              if (!_isNavigating) {
-                _navigateToMainWrapper();
-              }
+              _navigateToMainWrapper();
             }
           },
           child: Scaffold(
@@ -66,14 +85,31 @@ class _SplashState extends State<Splash> {
               child: Stack(
                 children: [
                   Center(
-                    child: SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: Image.asset(
-                        'lib/resources/image/visionary_background.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'を',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 110,
+                            fontWeight: FontWeight.w700,
+                            
+                          ),
+                        ),
+                        Transform.translate(
+                          offset: Offset(0, -10),
+                          child: Text(
+                            'other demension',
+                            style: TextStyle(
+                              color: Colors.white54,
+                              fontSize: 10,
+                            ),
+                          )
+                        )
+                      ]
+                    )
                   ),
                   Positioned(
                     bottom: 60,
@@ -82,9 +118,11 @@ class _SplashState extends State<Splash> {
                     child: Center(
                       child: BlocBuilder<MangaBloc, MangaState>(
                         builder: (context, state) {
-                          if (state is LoadingOdem) {
+                          if (state is ExtensionLoading) {
                             return const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             );
                           } else if (state is ErrorOdem) {
                             return Text(
@@ -137,11 +175,9 @@ class _SplashState extends State<Splash> {
   void _startNavigationTimer() {
     Future.delayed(const Duration(seconds: 5), () {
       if (mounted && !_isNavigating) {
-        final state = context.read<MangaBloc>().state;
-        if (state is FetchReco) {
-          _navigateToMainWrapper();
-        }
+        _navigateToMainWrapper();
       }
     });
   }
+  
 }

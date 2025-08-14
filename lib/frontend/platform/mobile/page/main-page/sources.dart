@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odem/backend/architecture/cubic/widget/sources_pages.dart'; // must export sourcePage cubit
-import 'package:odem/frontend/platform/mobile/page/main-page/source-content/extension.dart';
+import 'package:odem/frontend/platform/mobile/page/main-page/source-content/extension/extension.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/source-content/migrate.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/source-content/roots.dart';
 import 'package:odem/frontend/platform/mobile/widget/schema/color.dart';

@@ -11,14 +11,35 @@ sealed class MangaEvent extends Equatable {
 class LoadExtensions extends MangaEvent {}
 class InstallExtension extends MangaEvent {
   final String source;
-  const InstallExtension(this.source);
+  final bool fromExt;
+  const InstallExtension(
+    this.source,
+    this.fromExt
+  );
 
   @override
-  List<Object?> get props => [source];
+  List<Object?> get props => [source, fromExt];
 }
 
 class LoadOdem extends MangaEvent {
   const LoadOdem();
+}
+
+class LoadSearch extends MangaEvent {
+  final String title;
+  final String extKey;
+  final bool isSearch;
+  const LoadSearch(
+    this.title,
+    this.extKey,
+    this.isSearch
+  );
+  @override
+  List<Object?> get props => [
+    title,
+    extKey, 
+    isSearch
+  ];
 }
 
 class LoadImage extends MangaEvent {
