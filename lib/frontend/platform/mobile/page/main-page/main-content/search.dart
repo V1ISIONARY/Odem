@@ -94,7 +94,9 @@ class _SearchState extends State<Search> {
                         return GridTile(
                           child: SingleCard(
                             zipdata: manga,
-                          ),
+                            disableTap: false,
+                            fromSearch: true,
+                          )
                         );
                       },
                     );

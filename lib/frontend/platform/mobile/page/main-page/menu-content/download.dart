@@ -44,35 +44,35 @@ class _DownloadState extends State<Download> {
       ),
       body: ListView(
         children: [
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return SizedBox(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    double screenWidth = constraints.maxWidth;
-                    int crossAxisCount = (screenWidth / 150).floor(); 
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount, 
-                        mainAxisSpacing: 5, 
-                        crossAxisSpacing: 5, 
-                        childAspectRatio: 100 / 200, 
-                      ),
-                      itemCount: 1, 
-                      shrinkWrap: true, 
-                      physics: const NeverScrollableScrollPhysics(), 
-                      padding: const EdgeInsets.symmetric(horizontal: 15), 
-                      itemBuilder: (_, index) => GridTile(
-                        child: SingleCard(
-                          zipdata: null,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }
-          )
+          // LayoutBuilder(
+          //   builder: (context, constraints) {
+          //     return SizedBox(
+          //       child: LayoutBuilder(
+          //         builder: (context, constraints) {
+          //           double screenWidth = constraints.maxWidth;
+          //           int crossAxisCount = (screenWidth / 150).floor(); 
+          //           return GridView.builder(
+          //             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //               crossAxisCount: crossAxisCount, 
+          //               mainAxisSpacing: 5, 
+          //               crossAxisSpacing: 5, 
+          //               childAspectRatio: 100 / 200, 
+          //             ),
+          //             itemCount: 1, 
+          //             shrinkWrap: true, 
+          //             physics: const NeverScrollableScrollPhysics(), 
+          //             padding: const EdgeInsets.symmetric(horizontal: 15), 
+          //             itemBuilder: (_, index) => GridTile(
+          //               child: SingleCard(
+          //                 zipdata: null,
+          //               ),
+          //             ),
+          //           );
+          //         },
+          //       ),
+          //     );
+          //   }
+          // )
         ]
       ),
     );

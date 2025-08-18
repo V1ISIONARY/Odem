@@ -226,7 +226,7 @@ class _MigrateState extends State<Migrate>
                       return const Center(
                         child: Text(
                           'No extensions to migrate',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       );
                     }

@@ -53,7 +53,7 @@ class _MenuCardState extends State<MenuCard> {
             child: Container(
               height: 40,
               width: double.infinity,
-              color: Color.fromRGBO(21, 33, 34, 1),
+              color: Colors.transparent,
               child: Center(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

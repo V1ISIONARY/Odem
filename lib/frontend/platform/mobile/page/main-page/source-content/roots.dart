@@ -83,7 +83,7 @@ class _RootsState extends State<Roots> with AutomaticKeepAliveClientMixin, Singl
             return const Center(
               child: Text(
                 'No root extensions found',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.grey, fontSize: 12),
               ),
             );
           }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:odem/backend/architecture/cubic/widget/main_page.dart';
+import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/backend/properties/local_properties.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/explore.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/history.dart';
@@ -22,6 +23,8 @@ class BottomNavigation extends StatefulWidget {
 
 class BottomNavigationState extends State<BottomNavigation> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ExploreState> exploreKey = GlobalKey<ExploreState>();
+
   final localProperties = LocalProperties();
   late PageController pageController;
   late AnimationController _controller;
@@ -55,7 +58,11 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
 
   List<Widget> _initializeTopLevelPages() {
     return [
-      Explore(userToken: 'verified', drawble: drawerOpen),
+      Explore(
+        key: exploreKey,
+        userToken: 'verified', 
+        drawble: drawerOpen
+      ),
       const Library(userToken: 'verified'),
       const History(),
       const Sources(initialPage: 0),
@@ -105,7 +112,7 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
                 ),
                 _bottomAppBarItem(
                   context,
-                  icon: Icons.my_library_books_outlined, 
+                  icon: Icons.storage_outlined, 
                   svgIcon: '',
                   page: 1,
                   label: "Library",
@@ -162,6 +169,8 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
     return GestureDetector(
       key: key,
       onTap: () {
+        localProperties.longPressedIndex.value = false;
+        exploreKey.currentState?.triggerUnfocus();
         pageController.jumpToPage(page);
         onPageChanged(page);
       },

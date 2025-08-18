@@ -70,7 +70,7 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
       loadingExtension = ext;
     });
     if (ext != null) {
-      context.read<MangaBloc>().add(InstallExtension(ext.key)); 
+      context.read<MangaBloc>().add(InstallExtension(ext.key, true)); 
     }
   }
 
@@ -89,7 +89,7 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
               return const Center(
                 child: Text(
                   'No extensions loaded',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.grey, fontSize: 10),
                 ),
               );
             }
@@ -105,7 +105,7 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
                         padding: EdgeInsets.symmetric(vertical: 30),
                         child: Text(
                           'No installed extensions',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.grey, fontSize: 10),
                           textAlign: TextAlign.center,
                         ),
                       )
@@ -121,7 +121,6 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
                             action: [
                               GestureDetector(
                                 onTap: () {
-                                  // your action here if any
                                 },
                                 child: Container(
                                   width: 50,
@@ -156,7 +155,6 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
                         action: [
                           GestureDetector(
                             onTap: () {
-                              // some action
                             },
                             child: Container(
                               width: 50,
@@ -175,19 +173,19 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
                               width: 50,
                               child: Center(
                                 child: isLoading
-                                    ? const SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : Icon(
-                                        Icons.downloading_sharp,
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
                                         color: Colors.white,
-                                        size: 20,
+                                        strokeWidth: 2,
                                       ),
+                                    )
+                                  : Icon(
+                                      Icons.downloading_sharp,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
                               ),
                             ),
                           ),

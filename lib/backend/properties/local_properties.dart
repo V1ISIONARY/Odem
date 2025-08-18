@@ -12,6 +12,9 @@ class LocalProperties extends ChangeNotifier {
   factory LocalProperties() => _instance;
   LocalProperties._internal();
 
+  final libraryData = ValueNotifier<Map<String, List<RecoModel>>>({});
+  final libraryManga = ValueNotifier<List<RecoModel>>([]);
+
   final recommendManga = ValueNotifier<List<RecoModel>>([]);
   final mangaImg = ValueNotifier<List<MangaImgModel>>([]);
   final selectedRootIndex = ValueNotifier<int?>(null);
@@ -36,7 +39,8 @@ class LocalProperties extends ChangeNotifier {
     await _syncIfEmpty(recommendManga, DataSync.loadRecommendedManga);
     await _syncIfEmpty(migrationData, DataSync.loadMigrationData);
     await _syncIfEmpty(extensions, DataSync.loadExtensions);
-    await loadSavedSearchManga();
+    await _syncIfEmpty(searchManga, DataSync.loadSavedSearchManga);
+    await _syncIfEmpty(libraryData, DataSync.loadLibraryData);
     await loadSavedMangaRoot();
     notifyListeners();
   }
@@ -71,33 +75,6 @@ class LocalProperties extends ChangeNotifier {
     }
   }
 
-  Future<void> loadSavedSearchManga() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final stored = prefs.getString('searchManga');
-      if (stored == null || stored.isEmpty) return;
-
-      final Map<String, dynamic> raw = json.decode(stored);
-
-      final Map<String, Map<String, List<RecoModel>>> parsed =
-          raw.map((source, lists) {
-        final m = (lists as Map<String, dynamic>);
-        final def = (m['default'] as List? ?? const [])
-            .map((e) => RecoModel.fromJson(e))
-            .toList();
-
-        return MapEntry(source, {
-          'default': def,
-          'search': <RecoModel>[], 
-        });
-      });
-
-      searchManga.value = parsed;
-    } catch (e) {
-      print("Error loading searchManga from prefs: $e");
-    }
-  }
-
   Future<void> setMangaRootByIndex(int idx) async {
     if (idx >= 0 && idx < rootsExtension.value.length) {
       await _setMangaRoot(rootsExtension.value[idx].key, idx);
@@ -120,5 +97,8 @@ class LocalProperties extends ChangeNotifier {
     }
     notifyListeners();
   }
+  
+  final ValueNotifier<bool> longPressedIndex = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> showSearchPage = ValueNotifier<bool>(false);
 
 }

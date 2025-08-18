@@ -173,6 +173,48 @@ class DataSync {
     }
   }
 
-  
+  static Future<Map<String, List<RecoModel>>> loadLibraryData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getString("libraryData");
+    if (stored == null || stored.isEmpty) return {};
+
+    try {
+      final decoded = jsonDecode(stored) as Map<String, dynamic>;
+      return decoded.map((key, value) => MapEntry(
+        key,
+        (value as List).map((e) => RecoModel.fromJson(e)).toList(),
+      ));
+    } catch (e, st) {
+      print("Error loading libraryData: $e\n$st");
+      return {};
+    }
+  }
+
+  static Future<Map<String, Map<String, List<RecoModel>>>> loadSavedSearchManga() async {
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getString('searchManga');
+    if (stored == null || stored.isEmpty) return {};
+
+    try {
+      final Map<String, dynamic> raw = json.decode(stored);
+
+      final parsed = raw.map((source, lists) {
+        final m = (lists as Map<String, dynamic>);
+        final def = (m['default'] as List? ?? const [])
+            .map((e) => RecoModel.fromJson(e))
+            .toList();
+
+        return MapEntry(source, {
+          'default': def,
+          'search': <RecoModel>[],
+        });
+      });
+
+      return parsed;
+    } catch (e, st) {
+      print("Error loading searchManga from prefs: $e\n$st");
+      return {};
+    }
+  }
 
 }

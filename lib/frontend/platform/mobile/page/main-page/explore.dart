@@ -13,32 +13,38 @@ class Explore extends StatefulWidget {
 
   final String userToken;
   final VoidCallback drawble;
+  final GlobalKey<ExploreState>? keyExplore;
 
   const Explore({
     super.key,
     required this.userToken,
-    required this.drawble
+    required this.drawble,
+    this.keyExplore
   });
 
   @override
-  State<Explore> createState() => _ExploreState();
+  State<Explore> createState() => ExploreState();
 }
 
-class _ExploreState extends State<Explore> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class ExploreState extends State<Explore> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
+  int? longPressedIndex;
   final GlobalKey<BottomNavigationState> drawerOpen = GlobalKey<BottomNavigationState>();
+  final GlobalKey<RecommendState> recommendKey = GlobalKey<RecommendState>();
+
   final localProperties = LocalProperties();
-  late AnimationController _controller;
-  late Animation<Offset> _hintAnimation;
+  late TextEditingController _textEditingController;
   late Animation<Color?> _hintColorAnimation;
-  late FocusNode _focusNode;
   late AnimationController _controllerFade;
   late Animation<Color?> _colorAnimation;
-  late TextEditingController _textEditingController;
+  late Animation<Offset> _hintAnimation;
+  late AnimationController _controller;
+  late FocusNode _focusNode;
   bool _isSearching = false;
   bool _isFadedOut = false;
+  bool isClose = false;
 
   late AnimationController _controllerArtist; 
   late Animation<double> _positionAnimation1;
@@ -47,19 +53,37 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
   double position1 = 300; 
   double position2 = 300; 
 
+  late final AnimationController _fadeRecommendCtrl;
+  late final AnimationController _fadeSearchCtrl;
+  late final Animation<double> _opRecommend;
+  late final Animation<double> _opSearch;
+  bool _ignoreRecommend = false;
+  bool _ignoreSearch = true;
+  int _currentHintIndex = 0;
   final List<String> hints = [
     'Solo Leveling',
     'Level 999 Goblin'
   ];
 
-  int _currentHintIndex = 0;
-
-  late final AnimationController _fadeSearchCtrl;
-  late final AnimationController _fadeRecommendCtrl;
-  late final Animation<double> _opSearch;
-  late final Animation<double> _opRecommend;
-  bool _ignoreRecommend = false;
-  bool _ignoreSearch = true;
+  FocusNode get focusNode => _focusNode;
+  void triggerUnfocus() {
+    _textEditingController.text = "";
+    final Map<String, Map<String, List<RecoModel>>> currentMap = localProperties.searchManga.value.map((k, v) {
+      final inner = v.map((typeKey, list) => MapEntry(typeKey, List<RecoModel>.from(list)));
+      return MapEntry(k, inner);
+    });
+    localProperties.onSearchPage.value = false;
+    currentMap.forEach((source, typeMap) {
+      typeMap['search'] = <RecoModel>[];
+    });
+    localProperties.searchManga.value = currentMap;
+    _controller.reverse();
+    _controllerFade.reverse();
+    setState(() {
+      _rightContainerWidth = 0;
+      _isSearching = false;
+    });
+  }
 
   @override
   void initState() {
@@ -67,10 +91,7 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _textEditingController.addListener(() {
-        final text = _textEditingController.text.trim();
-        setState(() {
-          _rightContainerWidth = text.isNotEmpty ? 40 : 0;
-        });
+        setState(() {}); 
       });
     });
 
@@ -118,26 +139,30 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
     _textEditingController = TextEditingController();
     _changeHintText();
 
-    _focusNode.addListener(() {
-      final Map<String, Map<String, List<RecoModel>>> currentMap =
-          localProperties.searchManga.value.map((k, v) {
-        final inner = v.map((typeKey, list) =>
-            MapEntry(typeKey, List<RecoModel>.from(list)));
-        return MapEntry(k, inner);
-      });
+    _focusNode.addListener(() async {
+
       if (_focusNode.hasFocus && _textEditingController.text.isEmpty) {
+        await recommendKey.currentState!.endLongPress();
         localProperties.onSearchPage.value = true;
         _controllerFade.forward();
         _controller.forward();
-      } else if (!_focusNode.hasFocus && _textEditingController.text.isEmpty) {
-        localProperties.onSearchPage.value = false;
-        currentMap.forEach((source, typeMap) {
-          typeMap['search'] = <RecoModel>[]; 
+        setState(() {
+          _rightContainerWidth = 40;
         });
-        localProperties.searchManga.value = currentMap;
-        _controller.reverse();
-        _controllerFade.reverse();
-      }
+      } 
+      // else if (!_focusNode.hasFocus && _textEditingController.text.isEmpty) {
+      //   localProperties.onSearchPage.value = false;
+      //   currentMap.forEach((source, typeMap) {
+      //     typeMap['search'] = <RecoModel>[];
+      //   });
+      //   localProperties.searchManga.value = currentMap;
+      //   _controller.reverse();
+      //   _controllerFade.reverse();
+      //   setState(() {
+      //     _rightContainerWidth = 0;
+      //   });
+      // }
+      
     });
 
     _fadeSearchCtrl = AnimationController(
@@ -151,7 +176,6 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
 
     _opSearch = CurvedAnimation(parent: _fadeSearchCtrl, curve: Curves.easeInOut);
     _opRecommend = CurvedAnimation(parent: _fadeRecommendCtrl, curve: Curves.easeInOut);
-
     if (localProperties.onSearchPage.value) {
       _fadeSearchCtrl.value = 1.0;
       _fadeRecommendCtrl.value = 0.0;
@@ -252,29 +276,31 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 50,
-                child: Center(
-                  child: GestureDetector(
-                    onTap: widget.drawble,
-                    child: Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'lib/resources/image/static/solo.png',
-                          fit: BoxFit.cover, 
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              ),
-              SizedBox(width: 10),
+              // Container(
+              //   height: 50,
+              //   margin: EdgeInsets.only(
+              //     right: 10
+              //   ),
+              //   child: Center(
+              //     child: GestureDetector(
+              //       onTap: widget.drawble,
+              //       child: Container(
+              //         height: 25,
+              //         width: 25,
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           shape: BoxShape.circle
+              //         ),
+              //         child: ClipOval(
+              //           child: Image.asset(
+              //             'lib/resources/image/static/solo.png',
+              //             fit: BoxFit.cover, 
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //   )
+              // ),
               Expanded(
                 child: Row(
                   children: [
@@ -316,8 +342,6 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
                                         borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(5.0),
                                           bottomLeft: Radius.circular(5.0),
-                                          topRight: _rightContainerWidth > 0 ? Radius.circular(0) : Radius.circular(5.0),
-                                          bottomRight: _rightContainerWidth > 0 ? Radius.circular(0) : Radius.circular(5.0),
                                         ),
                                         borderSide: BorderSide(color: Colors.white),
                                       ),
@@ -415,11 +439,29 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
                       },
                       child: GestureDetector(
                         onTap: () {
-                          context.read<MangaBloc>().add(LoadSearch(
-                            _textEditingController.text,
-                            localProperties.mangaRoot.value,
-                            true
-                          ));
+                          if (_textEditingController.text.isEmpty) {
+                            final Map<String, Map<String, List<RecoModel>>> currentMap = localProperties.searchManga.value.map((k, v) {
+                              final inner = v.map((typeKey, list) => MapEntry(typeKey, List<RecoModel>.from(list)));
+                              return MapEntry(k, inner);
+                            });
+                            localProperties.onSearchPage.value = false;
+                            currentMap.forEach((source, typeMap) {
+                              typeMap['search'] = <RecoModel>[];
+                            });
+                            localProperties.searchManga.value = currentMap;
+                            _controller.reverse();
+                            _controllerFade.reverse();
+                            setState(() {
+                              _rightContainerWidth = 0;
+                              _isSearching = false;
+                            });
+                          } else {
+                            context.read<MangaBloc>().add(LoadSearch(
+                              _textEditingController.text,
+                              localProperties.mangaRoot.value,
+                              true,
+                            ));
+                          }
                         },
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 300),
@@ -444,7 +486,9 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
                                   ),
                                 )
                               : Icon(
-                                  Icons.send,
+                                  _textEditingController.text.isEmpty
+                                    ? Icons.close
+                                    : Icons.send,
                                   size: 15,
                                   color: Colors.black,
                                 ),
@@ -484,7 +528,10 @@ class _ExploreState extends State<Explore> with TickerProviderStateMixin, Automa
             ignoring: _ignoreRecommend,
             child: FadeTransition(
               opacity: _opRecommend,
-              child: Recommend(userToken: widget.userToken)
+              child: Recommend(
+                key: recommendKey,
+                userToken: widget.userToken
+              )
             )
           ),
           IgnorePointer(

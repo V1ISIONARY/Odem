@@ -7,7 +7,7 @@ class SourceCard extends StatelessWidget {
   final Extension? extension;
   final String? sourceTitle;
   final bool within;
-  final List<Widget>? action; // dynamic list of widgets for trailing actions
+  final List<Widget>? action; 
 
   const SourceCard({
     super.key,
@@ -16,6 +16,14 @@ class SourceCard extends StatelessWidget {
     required this.within,
     this.action,
   });
+
+  String getWeservUrl(String originalUrl) {
+    final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
+    final parts = noProtocol.split('/'); 
+    final domain = parts.first;
+    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
+    return 'https://images.weserv.nl/?url=$domain/$pathSegments';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +54,8 @@ class SourceCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                           child: Builder(
                             builder: (context) {
-                              String imageUrl = '';
-                              if (extension?.logoImg.isNotEmpty ?? false) {
-                                if (kIsWeb) {
-                                  imageUrl = 'https://images.weserv.nl/?url=' +
-                                      Uri.encodeComponent(
-                                          extension!.logoImg.replaceFirst('https://', ''));
-                                } else {
-                                  imageUrl = extension!.logoImg;
-                                }
-                              }
                               return Image.network(
-                                imageUrl,
+                                getWeservUrl(extension!.logoImg),
                                 width: 30,
                                 height: 30,
                                 fit: BoxFit.cover,

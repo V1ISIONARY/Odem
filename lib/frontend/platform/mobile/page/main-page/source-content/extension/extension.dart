@@ -77,10 +77,6 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
     }
   }
 
-  void _extensionInfo(){
-    print("object");
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -96,7 +92,7 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
               return const Center(
                 child: Text(
                   'No extensions loaded',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               );
             }
@@ -112,7 +108,7 @@ class _ExtensionPageState extends State<ExtensionPage> with AutomaticKeepAliveCl
                         padding: EdgeInsets.symmetric(vertical: 30),
                         child: Text(
                           'No installed extensions',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
                           textAlign: TextAlign.center,
                         ),
                       )

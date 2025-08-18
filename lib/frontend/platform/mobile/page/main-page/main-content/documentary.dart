@@ -504,9 +504,20 @@ class _DocumentaryState extends State<Documentary> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Chapters',
-                                  style: TextStyle(fontSize: 15, color: Colors.white),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Chapters',
+                                      style: TextStyle(fontSize: 15, color: Colors.white),
+                                    ),
+                                    // SizedBox(width: 10),
+                                    // Text(
+                                    //   'Anime',
+                                    //   style: TextStyle(fontSize: 12, color: Colors.grey),
+                                    // ),
+                                  ]
                                 ),
                                 GestureDetector(
                                   onTap: () {

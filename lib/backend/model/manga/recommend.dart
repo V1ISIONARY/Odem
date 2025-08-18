@@ -17,6 +17,9 @@ class RecoModel {
   double rating;
   List<ChapterDetail> chapterdetails;
 
+  /// ✅ New field to track when this entry was added/updated
+  final DateTime updatedAt;
+
   RecoModel({
     required this.title,
     required this.status,
@@ -30,8 +33,8 @@ class RecoModel {
     required this.tags,
     required this.artists,
     required this.authors,
-
     required this.chapterdetails,
+    required this.updatedAt,
   });
 
   factory RecoModel.fromJson(Map<String, dynamic> json) {
@@ -46,10 +49,10 @@ class RecoModel {
       title: json['title'] ?? 'N/A',
       status: json['status'] ?? 'N/A',
       rating: (json['rating'] is int)
-        ? (json['rating'] as int).toDouble()
-        : (json['rating'] is String)
-          ? double.tryParse(json['rating']) ?? 0.0
-          : json['rating'] ?? 0.0,
+          ? (json['rating'] as int).toDouble()
+          : (json['rating'] is String)
+              ? double.tryParse(json['rating']) ?? 0.0
+              : json['rating'] ?? 0.0,
       description: json['description'] ?? 'N/A',
       cover_image: normalizeImage(json['cover_image']),
       volume_count: int.tryParse(json['volume_count'].toString()) ?? 0,
@@ -60,12 +63,15 @@ class RecoModel {
       artists: List<String>.from(json['artists'] ?? []),
       authors: List<String>.from(json['authors'] ?? []),
       chapterdetails: (json['chapterdetails'] as List<dynamic>?)
-          ?.map((item) => ChapterDetail.fromJson(item))
-          .toList() ??
-        [],
+              ?.map((item) => ChapterDetail.fromJson(item))
+              .toList() ??
+          [],
+      /// ✅ Parse updatedAt, fallback to now
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
     );
   }
-
 
   Map<String, dynamic> toJson() {
     return {
@@ -82,7 +88,8 @@ class RecoModel {
       'authors': authors,
       'artists': artists,
       'chapterdetails': chapterdetails.map((e) => e.toJson()).toList(),
+      /// ✅ Save updatedAt as ISO string
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
-  
 }
