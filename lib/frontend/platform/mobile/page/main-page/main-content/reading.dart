@@ -62,6 +62,7 @@ class _ReadingState extends State<Reading> {
     if (fractionSum == 0) return;
     final progress = progressSum / fractionSum;
     if ((progress - _currentPageProgress).abs() > 0.01) {
+      if (!mounted) return;
       setState(() {
         _currentPageProgress = progress.clamp(1, imagesCount).toDouble();
       });
@@ -122,19 +123,17 @@ class _ReadingState extends State<Reading> {
                                       _loadedImageIndexes.add(index);
                                       if (!_imagesLoaded && _loadedImageIndexes.length == images.length) {
                                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                                          if (mounted) {
-                                            setState(() {
-                                              _imagesLoaded = true;
-                                              Future.delayed(const Duration(seconds: 5), () {
-                                                if (mounted) {
-                                                  setState(() {
-                                                    _showFullScreenLoader = false;
-                                                    _hasShownLoader = true;
-                                                  });
-                                                }
+                                          if (!mounted) return;
+                                          setState(() {
+                                            _imagesLoaded = true;
+                                            Future.delayed(const Duration(seconds: 5), () {
+                                              if (!mounted) return;
+                                              setState(() {
+                                                _showFullScreenLoader = false;
+                                                _hasShownLoader = true;
                                               });
                                             });
-                                          }
+                                          });
                                         });
                                       }
                                     }

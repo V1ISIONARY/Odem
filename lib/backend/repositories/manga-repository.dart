@@ -109,12 +109,10 @@ class MangaRepository {
         existingData[source] = mergedList;
         localProperties.migrationData.value = Map<String, List<RecoModel>>.from(existingData);
 
-        // Only update recommendManga if not from extension
         if (!fromExt) {
           localProperties.recommendManga.value = mergedList;
         }
 
-        // Save the full data including chapterdetails
         final fullDataJson = existingData.map(
           (key, list) => MapEntry(
             key,
@@ -185,6 +183,7 @@ class MangaRepository {
 
   Future<List<MangaImgModel>> fetchMangaImages(String seriesPath) async {
     final mangaRoot = await getMangaRoot();
+    localProperties.mangaImg.value = [];
     if (localProperties.mangaImg.value.isNotEmpty) {
       return localProperties.mangaImg.value;
     }

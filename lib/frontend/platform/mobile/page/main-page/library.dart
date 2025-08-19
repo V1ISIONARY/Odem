@@ -22,6 +22,7 @@ class _LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
 
   final localProperties = LocalProperties();
   String selectedCategory = "All";
+  int? expandedIndex;
 
   @override
   void initState() {
@@ -137,7 +138,17 @@ class _LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
                                     child: LibraryCard(
                                       zipdata: manga,
                                       disableTap: false,
-                                      showCircle: selectedCategory.toLowerCase() == "all"
+                                      isExpanded: expandedIndex == index,
+                                      showCircle: selectedCategory.toLowerCase() == "all",
+                                      onLongPress: () {
+                                        setState(() {
+                                          if (expandedIndex == index) {
+                                            expandedIndex = null;
+                                          } else {
+                                            expandedIndex = index; 
+                                          }
+                                        });
+                                      }, 
                                     ),
                                   );
                                 },
