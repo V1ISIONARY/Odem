@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
@@ -36,6 +37,7 @@ class _DocumentaryState extends State<Documentary> {
   @override
   void initState() {
     super.initState();
+    _loadFavoriteStatus();
     _scrollController = ScrollController();
     _scrollController.addListener(() {
       final offset = _scrollController.offset;
@@ -63,9 +65,66 @@ class _DocumentaryState extends State<Documentary> {
     final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
     final parts = noProtocol.split('/');
     final domain = parts.first;
-    final pathSegments =
-        parts.sublist(1).map(Uri.encodeComponent).join('/');
+    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
     return 'https://images.weserv.nl/?url=$domain/$pathSegments';
+  }
+
+  Future<void> _loadFavoriteStatus() async {
+    final localProperties = LocalProperties();
+    final currentMap = Map<String, List<RecoModel>>.from(
+      localProperties.libraryData.value,
+    );
+
+    final sourceKey = widget.extracted!.chapterdetails.first.sourceKey;
+
+    final alreadyFavorite = currentMap[sourceKey]?.any(
+        (item) => item.mangaid == widget.extracted!.mangaid,
+      ) ??
+      false;
+
+    setState(() {
+      isFavorite = alreadyFavorite;
+    });
+  }
+
+  Future<void> _toggleFavorite() async {
+    final localProperties = LocalProperties();
+    final currentMap = Map<String, List<RecoModel>>.from(
+      localProperties.libraryData.value,
+    );
+
+    final sourceKey = widget.extracted!.chapterdetails.first.sourceKey;
+
+    if (!currentMap.containsKey(sourceKey)) {
+      currentMap[sourceKey] = [];
+    }
+
+    if (isFavorite) {
+      currentMap[sourceKey]!.removeWhere(
+        (item) => item.mangaid == widget.extracted!.mangaid,
+      );
+    } else {
+      if (!currentMap[sourceKey]!.any(
+        (item) => item.mangaid == widget.extracted!.mangaid,
+      )) {
+        currentMap[sourceKey]!.insert(0, widget.extracted!);
+      }
+    }
+
+    localProperties.libraryData.value = currentMap;
+
+    final prefs = await SharedPreferences.getInstance();
+    final serializedMap = currentMap.map(
+      (key, list) => MapEntry(
+        key,
+        list.map((m) => m.toJson()).toList(),
+      ),
+    );
+    await prefs.setString("libraryData", jsonEncode(serializedMap));
+
+    setState(() {
+      isFavorite = !isFavorite;
+    });
   }
 
   @override
@@ -77,6 +136,7 @@ class _DocumentaryState extends State<Documentary> {
         ? List.of(widget.extracted!.chapterdetails)
         : List.of(widget.extracted!.chapterdetails.reversed);
 
+    final localProperties = LocalProperties();
     return Scaffold(
       backgroundColor: Colors.black,
       body: CustomScrollView(
@@ -188,6 +248,7 @@ class _DocumentaryState extends State<Documentary> {
             ),
             leading: GestureDetector(
               onTap: () {
+                localProperties.libraryRoot.value = "";
                 Navigator.pop(context);
               },
               child: Container(
@@ -291,15 +352,12 @@ class _DocumentaryState extends State<Documentary> {
                                 Positioned.fill(
                                   child: Container(
                                     width: double.infinity,
-                                    child: Image.network(
-                                      cover_image ?? main_image,
+                                    child: CachedNetworkImage(
+                                      imageUrl: cover_image ?? main_image,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return Image.asset(
-                                          'lib/resources/image/static/solo.png',
-                                          fit: BoxFit.cover,
-                                        );
-                                      },
+                                      placeholder: (_, __) => Container(
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -449,44 +507,24 @@ class _DocumentaryState extends State<Documentary> {
                     children: [
                       Expanded(
                         child: GestureDetector(
-                          onTap: () async {
-                            final localProperties = LocalProperties();
-                            final root = localProperties.mangaRoot.value;
-                            final currentMap = Map<String, List<RecoModel>>.from(
-                                localProperties.libraryData.value);
-                            if (!currentMap.containsKey(root)) {
-                              currentMap[root] = [];
-                            }
-                            if (!currentMap[root]!.any((item) =>
-                                item.mangaid == widget.extracted!.mangaid)) {
-                              currentMap[root]!.insert(0, widget.extracted!);
-                            }
-                            localProperties.libraryData.value = currentMap;
-                            final prefs = await SharedPreferences.getInstance();
-                            final serializedMap = currentMap.map((key, list) =>
-                                MapEntry(key, list.map((m) => m.toJson()).toList()));
-                            await prefs.setString("libraryData", jsonEncode(serializedMap));
-                            setState(() {
-                              isFavorite = !isFavorite;
-                            });
-                          },
+                          onTap: _toggleFavorite,
                           child: IconCard(
                             title: 'Favorite',
                             iconWidget: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
                               transitionBuilder: (child, animation) =>
-                                  ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              ),
+                                ScaleTransition(
+                                  scale: animation,
+                                  child: child,
+                                ),
                               child: Icon(
                                 isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
                                 key: ValueKey(isFavorite),
                                 color: isFavorite
-                                    ? Colors.red
-                                    : Colors.white70,
+                                  ? Colors.red
+                                  : Colors.white70,
                                 size: 24,
                               ),
                             ),

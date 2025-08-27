@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
+import 'package:odem/backend/properties/functionalities/sync.dart';
 import 'package:odem/backend/properties/local_properties.dart';
 import 'package:odem/frontend/platform/mobile/widget/button/category_card.dart';
 import 'package:odem/frontend/platform/mobile/widget/button/library_card.dart';
@@ -13,13 +14,14 @@ class Library extends StatefulWidget {
   });
 
   @override
-  State<Library> createState() => _LibraryState();
+  State<Library> createState() => LibraryState();
 }
 
-class _LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
+class LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
+  final ScrollController _scrollController = ScrollController();
   final localProperties = LocalProperties();
   String selectedCategory = "All";
   int? expandedIndex;
@@ -32,26 +34,57 @@ class _LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
     });
   }
 
-  void _refreshLibraryManga() {
-    final Map<String, List<RecoModel>> libraryDataMap = localProperties.libraryData.value;
+  void scrollToTop() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
 
+  void _refreshLibraryManga({List<RecoModel>? newItems}) {
+    final Map<String, List<RecoModel>> libraryDataMap = localProperties.libraryData.value;
     List<RecoModel> result;
+
     if (selectedCategory.toLowerCase() == "all") {
-      result = libraryDataMap.values
-          .expand<RecoModel>((list) => list)
-          .toList();
+      result = libraryDataMap.values.expand<RecoModel>((list) => list).toList();
     } else {
       final normalizedKey = selectedCategory.toLowerCase().replaceAll('.', '-');
       result = List<RecoModel>.from(libraryDataMap[normalizedKey] ?? const <RecoModel>[]);
     }
 
-    result.sort((a, b) {
-      final aDate = (a.updatedAt);
-      final bDate = (b.updatedAt);
-      return bDate.compareTo(aDate);
-    });
+    if (newItems != null && newItems.isNotEmpty) {
+      for (var item in newItems) {
+        result.removeWhere((m) => m.mangaid == item.mangaid);
+        result.add(item);
+      }
+    }
 
-    localProperties.libraryManga.value = result;
+    final pinned = result.where((m) => m.isPinned).toList();
+    final unpinned = result.where((m) => !m.isPinned).toList();
+
+    pinned.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    unpinned.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    // for (var manga in unpinned) {
+    //   print('Title: ${manga.title}, updatedAt: ${manga.updatedAt}');
+    // }
+
+    final updatedList = [...pinned, ...unpinned];
+    localProperties.libraryManga.value = updatedList;
+    localProperties.libraryManga.notifyListeners();
+  }
+
+  void resetLibrary() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      setState(() {
+        expandedIndex = null;
+        selectedCategory = "All";
+        _refreshLibraryManga();
+      });
+    });
   }
 
   @override
@@ -97,6 +130,7 @@ class _LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
                     onCategoryChanged: (label) {
                       setState(() {
                         selectedCategory = label;
+                        expandedIndex = null;
                       });
                     },
                   ),
@@ -115,6 +149,7 @@ class _LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
                       }
 
                       return ListView(
+                        controller: _scrollController,
                         children: [
                           LayoutBuilder(
                             builder: (context, constraints) {
@@ -141,14 +176,37 @@ class _LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
                                       isExpanded: expandedIndex == index,
                                       showCircle: selectedCategory.toLowerCase() == "all",
                                       onLongPress: () {
-                                        setState(() {
-                                          if (expandedIndex == index) {
-                                            expandedIndex = null;
-                                          } else {
-                                            expandedIndex = index; 
-                                          }
+                                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                                          if (!mounted) return;
+                                          setState(() {
+                                            if (expandedIndex == index) {
+                                              expandedIndex = null;
+                                            } else {
+                                              expandedIndex = index; 
+                                            }
+                                          });
                                         });
-                                      }, 
+                                      },
+
+                                      unFav: () async {
+                                        final key = manga.chapterdetails.first.sourceKey;
+                                        final current = localProperties.libraryData.value;
+                                        if (current.containsKey(key)) {
+                                          current[key] = current[key]!
+                                            .where((m) => m.mangaid != manga.mangaid)
+                                            .toList();
+                                          if (current[key]!.isEmpty) {
+                                            current.remove(key);
+                                          }
+                                          localProperties.libraryData.value = Map.from(current); 
+                                        }
+
+                                        localProperties.libraryManga.value = localProperties.libraryManga.value
+                                          .where((m) => m.mangaid != manga.mangaid)
+                                          .toList();
+                                        await DataSync.saveLibraryData(localProperties.libraryData.value);
+                                        await localProperties.syncData();
+                                      },
                                     ),
                                   );
                                 },

@@ -190,6 +190,15 @@ class DataSync {
     }
   }
 
+  static Future<void> saveLibraryData(Map<String, List<RecoModel>> data) async {
+    final prefs = await SharedPreferences.getInstance();
+    final encoded = data.map((key, value) => MapEntry(
+        key,
+        value.map((e) => e.toJson()).toList(),
+      ));
+    await prefs.setString("libraryData", jsonEncode(encoded));
+  }
+
   static Future<Map<String, Map<String, List<RecoModel>>>> loadSavedSearchManga() async {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getString('searchManga');

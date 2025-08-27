@@ -61,8 +61,13 @@ class MangaBloc extends Bloc<MangaEvent, MangaState> {
     on<FetchMangaImages>((event, emit) async {
       emit(LoadingMangaImage());
       try {
-        final images = await repository.fetchMangaImages(event.seriesPath);
-        emit(MangaImageLoaded(images));
+        final imagesData = await repository.fetchMangaImages(event.seriesPath);
+
+        emit(MangaImageLoaded(
+          imagesData['current'] ?? [],
+          previous: imagesData['previous'] ?? [],
+          next: imagesData['next'] ?? [],
+        ));
       } catch (e) {
         emit(ErrorOdem(e.toString()));
       }

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:odem/backend/architecture/cubic/widget/main_page.dart';
-import 'package:odem/backend/model/manga/recommend.dart';
+import 'package:odem/backend/architecture/cubic/widget/sources_pages.dart';
 import 'package:odem/backend/properties/local_properties.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/explore.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/history.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/library.dart';
+import 'package:odem/frontend/platform/mobile/page/main-page/main-content/recommend.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/sources.dart';
 import 'package:odem/frontend/platform/mobile/widget/drawer.dart';
 
@@ -22,15 +23,14 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class BottomNavigationState extends State<BottomNavigation> with SingleTickerProviderStateMixin {
+  final GlobalKey<RecommendState> recommendKey = GlobalKey<RecommendState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<LibraryState> libraryKey = GlobalKey<LibraryState>();
   final GlobalKey<ExploreState> exploreKey = GlobalKey<ExploreState>();
+  final GlobalKey<SourcesState> sourceKey = GlobalKey<SourcesState>();
 
   final localProperties = LocalProperties();
   late PageController pageController;
-  late AnimationController _controller;
-  late Animation<Alignment> _beginAnimation;
-  late Animation<Alignment> _endAnimation;
-
   late List<Widget> topLevelPages;
 
   void drawerOpen() {
@@ -63,9 +63,15 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
         userToken: 'verified', 
         drawble: drawerOpen
       ),
-      const Library(userToken: 'verified'),
+      Library(
+        key: libraryKey,
+        userToken: 'verified'
+      ),
       const History(),
-      const Sources(initialPage: 0),
+      Sources(
+        key: sourceKey,
+        initialPage: 0
+      ),
     ];
   }
 
@@ -139,12 +145,15 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
     );
   }
 
-  PageView _BottomNavigationBody() {
-    return PageView(
-      onPageChanged: (int page) => onPageChanged(page),
-      controller: pageController,
-      children: topLevelPages,
-    );
+  void keyTodefault(){
+    exploreKey.currentState?.scrollRecommendToTop();
+    localProperties.longPressedIndex.value = false;
+    exploreKey.currentState?.triggerUnfocus();
+    libraryKey.currentState?.resetLibrary();
+    libraryKey.currentState?.scrollToTop();
+    localProperties.restartScrolls();
+
+    sourceKey.currentState?.pageController.jumpToPage(0);
   }
 
   PageView _mainWrapperBody() {
@@ -169,8 +178,7 @@ class BottomNavigationState extends State<BottomNavigation> with SingleTickerPro
     return GestureDetector(
       key: key,
       onTap: () {
-        localProperties.longPressedIndex.value = false;
-        exploreKey.currentState?.triggerUnfocus();
+        keyTodefault();
         pageController.jumpToPage(page);
         onPageChanged(page);
       },

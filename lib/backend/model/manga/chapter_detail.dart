@@ -1,26 +1,40 @@
 class ChapterDetail {
-  final String link;
+  DateTime timeRead;
+  final String sourceKey;
   final String chapter;
+  final String link;
   final String date;
+  int percentage;
 
   ChapterDetail({
-    required this.link,
+    required this.sourceKey,
+    required this.timeRead,
     required this.chapter,
+    this.percentage = 0,
+    required this.link,
     required this.date,
   });
 
   factory ChapterDetail.fromJson(Map<String, dynamic> json) {
     return ChapterDetail(
-      link: json['link'] ?? '',
+      sourceKey: json['sourceKey'] ?? 'Unknown',
       chapter: json['chapterNo'] ?? 'Unknown',
+      percentage: json['percentage'] ?? 0,
+      timeRead: json['timeRead'] != null 
+        ? DateTime.parse(json['timeRead']) 
+        : DateTime.fromMillisecondsSinceEpoch(0),
       date: json['date'] ?? 'Unknown',
+      link: json['link'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'link': link,
+      'timeRead': timeRead.toIso8601String(),
+      'percentage': percentage,
+      'sourceKey': sourceKey,
       'chapterNo': chapter,
+      'link': link,
       'date': date,
     };
   }

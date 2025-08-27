@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odem/backend/architecture/bloc/manga/manga_bloc.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/backend/properties/local_properties.dart';
+import 'package:odem/backend/properties/permissions/storage.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/main-content/recommend.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/main-content/search.dart';
 import '../../widget/bottom_navigation.dart';
@@ -14,12 +15,11 @@ class Explore extends StatefulWidget {
   final String userToken;
   final VoidCallback drawble;
   final GlobalKey<ExploreState>? keyExplore;
-
   const Explore({
     super.key,
     required this.userToken,
     required this.drawble,
-    this.keyExplore
+    this.keyExplore,
   });
 
   @override
@@ -85,9 +85,17 @@ class ExploreState extends State<Explore> with TickerProviderStateMixin, Automat
     });
   }
 
+  void scrollRecommendToTop() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      recommendKey.currentState?.scrollToTop();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    chooseDownloadPath();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _textEditingController.addListener(() {
@@ -439,6 +447,7 @@ class ExploreState extends State<Explore> with TickerProviderStateMixin, Automat
                       },
                       child: GestureDetector(
                         onTap: () {
+                          localProperties.restartScrolls();
                           if (_textEditingController.text.isEmpty) {
                             final Map<String, Map<String, List<RecoModel>>> currentMap = localProperties.searchManga.value.map((k, v) {
                               final inner = v.map((typeKey, list) => MapEntry(typeKey, List<RecoModel>.from(list)));
@@ -538,7 +547,7 @@ class ExploreState extends State<Explore> with TickerProviderStateMixin, Automat
             ignoring: _ignoreSearch,
             child: FadeTransition(
               opacity: _opSearch,
-              child: Search(),
+              child: Search(key: localProperties.searchScroll),
             ),
           )
         ],

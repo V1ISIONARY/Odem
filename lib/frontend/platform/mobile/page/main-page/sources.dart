@@ -14,10 +14,10 @@ class Sources extends StatefulWidget {
   });
 
   @override
-  State<Sources> createState() => _SourcesState();
+  State<Sources> createState() => SourcesState();
 }
 
-class _SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
+class SourcesState extends State<Sources> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   late PageController pageController;

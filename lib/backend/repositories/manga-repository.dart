@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:odem/backend/model/extension.dart';
@@ -63,77 +64,77 @@ class MangaRepository {
   }
 
   Future<List<RecoModel>> InstallExtension(String source, bool fromExt) async {
-  try {
-    final response = await http.get(Uri.parse('$endpoint/manga/$source/recommend?lock=$key'));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['result'] is List) {
-        final recommend = data['result'] as List;
-        final parsedList = recommend
-            .map((manga) => RecoModel.fromJson(manga))
-            .where((manga) => manga.chapterdetails.isNotEmpty)
-            .toList();
+    try {
+      final response = await http.get(Uri.parse('$endpoint/manga/$source/recommend?lock=$key'));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['result'] is List) {
+          final recommend = data['result'] as List;
+          final parsedList = recommend
+              .map((manga) => RecoModel.fromJson(manga))
+              .where((manga) => manga.chapterdetails.isNotEmpty)
+              .toList();
 
-        final prefs = await SharedPreferences.getInstance();
-        final existingJson = prefs.getString('migrationData');
-        Map<String, List<RecoModel>> existingData = {};
+          final prefs = await SharedPreferences.getInstance();
+          final existingJson = prefs.getString('migrationData');
+          Map<String, List<RecoModel>> existingData = {};
 
-        if (existingJson != null && existingJson.isNotEmpty) {
-          final decoded = jsonDecode(existingJson) as Map<String, dynamic>;
-          existingData = decoded.map(
+          if (existingJson != null && existingJson.isNotEmpty) {
+            final decoded = jsonDecode(existingJson) as Map<String, dynamic>;
+            existingData = decoded.map(
+              (key, list) => MapEntry(
+                key,
+                (list as List).map((item) => RecoModel.fromJson(item)).toList(),
+              ),
+            );
+          }
+
+          List<RecoModel> existingList = existingData[source] ?? [];
+          Map<String, RecoModel> existingMap = {for (var item in existingList) item.title: item};
+
+          for (var newItem in parsedList) {
+            if (existingMap.containsKey(newItem.title)) {
+              final existingItem = existingMap[newItem.title]!;
+              Map<String, ChapterDetail> chapterMap = {for (var ch in existingItem.chapterdetails) ch.link: ch};
+              for (var newChapter in newItem.chapterdetails) {
+                chapterMap[newChapter.link] = newChapter;
+              }
+              existingItem.chapterdetails = chapterMap.values.toList();
+              existingItem.rating = newItem.rating;
+            } else {
+              existingMap[newItem.title] = newItem;
+            }
+          }
+
+          final mergedList = existingMap.values.toList();
+          existingData[source] = mergedList;
+          localProperties.migrationData.value = Map<String, List<RecoModel>>.from(existingData);
+
+          if (!fromExt) {
+            localProperties.recommendManga.value = mergedList;
+          }
+
+          final fullDataJson = existingData.map(
             (key, list) => MapEntry(
               key,
-              (list as List).map((item) => RecoModel.fromJson(item)).toList(),
+              list.map((reco) => reco.toJson()).toList(),
             ),
           );
+          await prefs.setString('migrationData', jsonEncode(fullDataJson));
+
+          return existingData[source] ?? [];
         }
-
-        List<RecoModel> existingList = existingData[source] ?? [];
-        Map<String, RecoModel> existingMap = {for (var item in existingList) item.title: item};
-
-        for (var newItem in parsedList) {
-          if (existingMap.containsKey(newItem.title)) {
-            final existingItem = existingMap[newItem.title]!;
-            Map<String, ChapterDetail> chapterMap = {for (var ch in existingItem.chapterdetails) ch.link: ch};
-            for (var newChapter in newItem.chapterdetails) {
-              chapterMap[newChapter.link] = newChapter;
-            }
-            existingItem.chapterdetails = chapterMap.values.toList();
-            existingItem.rating = newItem.rating;
-          } else {
-            existingMap[newItem.title] = newItem;
-          }
-        }
-
-        final mergedList = existingMap.values.toList();
-        existingData[source] = mergedList;
-        localProperties.migrationData.value = Map<String, List<RecoModel>>.from(existingData);
-
-        if (!fromExt) {
-          localProperties.recommendManga.value = mergedList;
-        }
-
-        final fullDataJson = existingData.map(
-          (key, list) => MapEntry(
-            key,
-            list.map((reco) => reco.toJson()).toList(),
-          ),
-        );
-        await prefs.setString('migrationData', jsonEncode(fullDataJson));
-
-        return existingData[source] ?? [];
       }
+      return [];
+    } catch (e) {
+      print("Error fetching recommended manga: $e");
+      return [];
     }
-    return [];
-  } catch (e) {
-    print("Error fetching recommended manga: $e");
-    return [];
   }
-}
 
   Future<List<RecoModel>> searchManga(String title, String extKey, bool isSearch) async {
     try {
-      final localProperties = LocalProperties();
+      final localProperties = LocalProperties.instance;
       final response = await http.get(
         Uri.parse('$endpoint/manga/$extKey/search?name=$title&lock=$key'),
       );
@@ -143,6 +144,11 @@ class MangaRepository {
           final recommend = data['result'] as List;
           final parsedList = recommend.map((manga) => RecoModel.fromJson(manga)).toList();
 
+          // debugPrint("First 10 fetched manga titles:");
+          // for (int i = 0; i < parsedList.length && i < 10; i++) {
+          //   debugPrint("- ${parsedList[i].title}");
+          // }
+
           final currentMap = localProperties.searchManga.value;
           final updatedMap = currentMap.map((source, typeMap) {
             return MapEntry(
@@ -150,19 +156,28 @@ class MangaRepository {
               typeMap.map((typeKey, list) => MapEntry(typeKey, List<RecoModel>.from(list))),
             );
           });
-          final sourceKey = (extKey.isNotEmpty) ? extKey : "unknown-source";
+          final sourceKey = extKey.isNotEmpty ? extKey : "unknown-source";
           updatedMap[sourceKey] ??= {
             'default': <RecoModel>[],
             'search': <RecoModel>[],
           };
-          if (updatedMap[sourceKey]!['default']!.isEmpty) {
-            updatedMap[sourceKey]!['default'] = parsedList;
-            updatedMap[sourceKey]!['search'] = isSearch ? parsedList : <RecoModel>[];
-          } else if (isSearch) {
+          if (!isSearch) {
+            final defaultList = updatedMap[sourceKey]!['default']!;
+            for (var manga in parsedList) {
+              if (!defaultList.any((m) => m.title == manga.title)) {
+                defaultList.add(manga);
+              }
+            }
+            updatedMap[sourceKey]!['default'] = defaultList;
+          }
+          if (isSearch) {
             updatedMap[sourceKey]!['search'] = parsedList;
+          } else if (updatedMap[sourceKey]!['search'] == null) {
+            updatedMap[sourceKey]!['search'] = <RecoModel>[];
           }
           updatedMap.removeWhere((key, _) => key.trim().isEmpty);
-          localProperties.searchManga.value = updatedMap;
+          localProperties.searchManga.value = Map.from(updatedMap);
+          localProperties.searchManga.notifyListeners();
           final prefs = await SharedPreferences.getInstance();
           final jsonMap = updatedMap.map((source, typeMap) {
             return MapEntry(
@@ -174,6 +189,7 @@ class MangaRepository {
           return parsedList;
         }
       }
+
       return [];
     } catch (e) {
       print("Error fetching recommended manga: $e");
@@ -181,27 +197,42 @@ class MangaRepository {
     }
   }
 
-  Future<List<MangaImgModel>> fetchMangaImages(String seriesPath) async {
-    final mangaRoot = await getMangaRoot();
-    localProperties.mangaImg.value = [];
-    if (localProperties.mangaImg.value.isNotEmpty) {
-      return localProperties.mangaImg.value;
-    }
+  Future<Map<String, List<MangaImgModel>>> fetchMangaImages(String seriesPath) async {
+    
+    final mangaRoot = (localProperties.libraryRoot.value.isNotEmpty)
+      ? localProperties.libraryRoot.value
+      : await getMangaRoot();
+
     final url = Uri.parse('$endpoint/manga/$mangaRoot/reader/$seriesPath?lock=$key');
     final response = await http.get(url);
+
     if (response.statusCode != 200) {
       throw Exception('Failed to load manga images, status: ${response.statusCode}');
     }
-    final data = json.decode(response.body);
-    if (data['images'] == null || (data['images'] as List).isEmpty) {
-      throw Exception('No images found in response');
-    }
-    final parsedList = (data['images'] as List<dynamic>)
-      .map((imgUrl) => MangaImgModel.fromJson(imgUrl))
-      .toList();
-    localProperties.mangaImg.value = parsedList;
 
-    return parsedList;
+    final data = json.decode(response.body);
+    if (data is! List || data.isEmpty) {
+      throw Exception('Invalid response structure');
+    }
+
+    final pageData = data.first;
+
+    for (final key in ['previous', 'current', 'next']) {
+      final list = pageData[key];
+      if (list != null && list is List && list.isNotEmpty) {
+        localProperties.mangaImgSections[key] = list.map((img) => MangaImgModel.fromJson(img)).toList();
+      } else {
+        localProperties.mangaImgSections[key] = [];
+      }
+    }
+
+    localProperties.mangaImg.value = [
+      // ...localProperties.mangaImgSections['previous']!,
+      ...localProperties.mangaImgSections['current']!,
+      // ...localProperties.mangaImgSections['next']!,
+    ];
+
+    return localProperties.mangaImgSections;
   }
 
 }

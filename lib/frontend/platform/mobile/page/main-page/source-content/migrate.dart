@@ -29,7 +29,7 @@ class _MigrateState extends State<Migrate>
   Map<String, int> lastMigrationTimes = {};
   Timer? _timer;
 
-  static const _migrationCooldown = Duration(minutes: 5);
+  static const _migrationCooldown = Duration(seconds: 1);
   static const _prefsKey = 'lastMigrationTimestampsMap';
 
   String? _expandedKey;
@@ -210,7 +210,7 @@ class _MigrateState extends State<Migrate>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.only(right: 15, left: 15, bottom: 14),
+                padding: const EdgeInsets.only(top: 10, right: 15, left: 15, bottom: 14),
                 child: Row(
                   children: const [
                     ContentTitle(title: "Select a source to migrate from"),

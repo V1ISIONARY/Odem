@@ -7,8 +7,12 @@ import 'package:odem/frontend/platform/mobile/widget/button/single_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Recommend extends StatefulWidget {
+  
   final String userToken;
-  const Recommend({super.key, required this.userToken});
+  const Recommend({
+    super.key, 
+    required this.userToken
+  });
 
   @override
   State<Recommend> createState() => RecommendState();
@@ -16,8 +20,9 @@ class Recommend extends StatefulWidget {
 
 class RecommendState extends State<Recommend> {
   final localProperties = LocalProperties();
-  int? _longPressedIndex;
+  final ScrollController _scrollController = ScrollController();
   final Map<int, GlobalKey> _cardKeys = {};
+  int? _longPressedIndex;
 
   Offset? _selectedCardPosition;
   Size? _selectedCardSize;
@@ -43,6 +48,18 @@ class RecommendState extends State<Recommend> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() => _isCentered = true);
+    });
+  }
+
+  void scrollToTop() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOut,
+        );
+      }
     });
   }
 
@@ -89,11 +106,17 @@ class RecommendState extends State<Recommend> {
             double screenWidth = constraints.maxWidth;
             int crossAxisCount = (screenWidth / 150).floor();
             if (crossAxisCount < 1) crossAxisCount = 1;
-            int itemCount = recommendList.length;
+
+            final filteredItems = recommendList.where((item) {
+              return item.chapter_count != "0" && item.chapterdetails.isNotEmpty;
+            }).toList();
+
+            int itemCount = filteredItems.length;
             if (itemCount % crossAxisCount == 1) {
               itemCount -= 1;
             }
             return GridView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 15),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: crossAxisCount,
@@ -106,7 +129,7 @@ class RecommendState extends State<Recommend> {
                 ? const NeverScrollableScrollPhysics()
                 : const AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                final manga = recommendList[index];
+                final manga = filteredItems[index];
                 final isSelected = _longPressedIndex == index;
                 _cardKeys.putIfAbsent(index, () => GlobalKey());
 
@@ -196,35 +219,39 @@ class RecommendState extends State<Recommend> {
                           children: [
                             GestureDetector(
                               onTap: () async {
+                                final localProperties = LocalProperties();
                                 final manga = recommendList[_longPressedIndex!];
-                                final root = localProperties.mangaRoot.value;
+                                final sourceKey = manga.chapterdetails.first.sourceKey;
+
                                 final currentMap = Map<String, List<RecoModel>>.from(localProperties.libraryData.value);
-                                if (!currentMap.containsKey(root)) {
-                                  currentMap[root] = [];
+
+                                if (!currentMap.containsKey(sourceKey)) {
+                                  currentMap[sourceKey] = [];
                                 }
-                                if (!currentMap[root]!.any((item) => item.mangaid == manga.mangaid)) {
-                                  currentMap[root]!.insert(0, manga); 
+
+                                final isFavorite = currentMap[sourceKey]!
+                                    .any((item) => item.mangaid == manga.mangaid);
+
+                                if (isFavorite) {
+                                  currentMap[sourceKey]!.removeWhere((item) => item.mangaid == manga.mangaid);
+                                } else {
+                                  currentMap[sourceKey]!.insert(0, manga);
                                 }
+
                                 localProperties.libraryData.value = currentMap;
                                 final prefs = await SharedPreferences.getInstance();
-                                final serializedMap = currentMap.map((key, list) => MapEntry(key, list.map((m) => m.toJson()).toList()));
+                                final serializedMap = currentMap.map(
+                                  (key, list) => MapEntry(key, list.map((m) => m.toJson()).toList()),
+                                );
                                 await prefs.setString("libraryData", jsonEncode(serializedMap));
 
-                                print("📚 Current Library Data:");
-                                currentMap.forEach((key, list) {
-                                  print("Root: $key");
-                                  for (var item in list) {
-                                    print(" - Manga ID: ${item.mangaid}, Title: ${item.title}");
-                                  }
-                                });
+                                setState(() {}); 
                                 _onLongPressEnd();
                               },
                               child: Container(
                                 height: 30,
                                 width: double.infinity,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 10),
                                 decoration: BoxDecoration(
                                   color: Colors.transparent,
                                   border: const Border(
@@ -238,22 +265,52 @@ class RecommendState extends State<Recommend> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Favorite',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                      ),
+                                    Builder(
+                                      builder: (context) {
+                                        final localProperties = LocalProperties();
+                                        final sourceKey = recommendList[_longPressedIndex!].chapterdetails.first.sourceKey;
+
+                                        final isFavorite = localProperties.libraryData.value[sourceKey]
+                                          ?.any((item) => item.mangaid == recommendList[_longPressedIndex!].mangaid) ??
+                                          false;
+
+                                        return Text(
+                                          isFavorite ? 'Unfavorite' : 'Favorite',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                          ),
+                                        );
+                                      }
                                     ),
                                     Spacer(),
-                                    Icon(
-                                      Icons.favorite_border,
-                                      color: Colors.white,
-                                      size: 13,
-                                    )
+                                    Builder(
+                                      builder: (context) {
+                                        final localProperties = LocalProperties();
+                                        final sourceKey = recommendList[_longPressedIndex!].chapterdetails.first.sourceKey;
+
+                                        final isFavorite = localProperties.libraryData.value[sourceKey]
+                                          ?.any((item) => item.mangaid == recommendList[_longPressedIndex!].mangaid) ??
+                                          false;
+
+                                        return AnimatedSwitcher(
+                                          duration: const Duration(milliseconds: 300),
+                                          transitionBuilder: (child, animation) => ScaleTransition(
+                                            scale: animation,
+                                            child: child,
+                                          ),
+                                          child: Icon(
+                                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                                            key: ValueKey(isFavorite),
+                                            color: isFavorite ? Colors.red : Colors.white,
+                                            size: 13,
+                                          ),
+                                        );
+                                      }
+                                    ),
                                   ],
-                                )
-                              )
+                                ),
+                              ),
                             ),
                             GestureDetector(
                               child: Container(

@@ -31,15 +31,20 @@ dependencies:
   flutter:
     sdk: flutter
 
+  intl: ^0.20.2
   equatable: ^2.0.5
+  file_picker: ^6.0.0
   google_fonts: ^6.3.0
   flutter_bloc: ^8.1.6
   flutter_svg: ^2.0.14
+  path_provider: ^2.1.5
   flutter_dotenv: ^5.0.2
   page_transition: ^2.0.5
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.3.2
+  permission_handler: ^10.4.0
   visibility_detector: ^0.3.0
+  cached_network_image: ^3.4.1
   flutter_launcher_icons: ^0.14.3
 
 flutter_launcher_icons:

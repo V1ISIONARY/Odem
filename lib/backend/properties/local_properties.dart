@@ -1,24 +1,32 @@
-import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:odem/backend/model/extension.dart';
 import 'package:odem/backend/model/manga/chapter_detail.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/backend/properties/functionalities/sync.dart';
+import 'package:odem/frontend/platform/mobile/page/main-page/main-content/recommend.dart';
+import 'package:odem/frontend/platform/mobile/page/main-page/main-content/search.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalProperties extends ChangeNotifier {
-  static final LocalProperties _instance = LocalProperties._internal();
-  factory LocalProperties() => _instance;
+  static final LocalProperties instance = LocalProperties._internal();
+  factory LocalProperties() => instance;
   LocalProperties._internal();
 
   final libraryData = ValueNotifier<Map<String, List<RecoModel>>>({});
   final libraryManga = ValueNotifier<List<RecoModel>>([]);
 
   final recommendManga = ValueNotifier<List<RecoModel>>([]);
+  
   final mangaImg = ValueNotifier<List<MangaImgModel>>([]);
+  Map<String, List<MangaImgModel>> mangaImgSections = {
+    'previous': [],
+    'current': [],
+    'next': [],
+  };
+
   final selectedRootIndex = ValueNotifier<int?>(null);
   final mangaRoot = ValueNotifier<String>("");
+  final libraryRoot = ValueNotifier<String>("");
 
   final installedExtension = ValueNotifier<List<Extension>>([]);
   final migrateExtension = ValueNotifier<List<Extension>>([]);
@@ -100,5 +108,15 @@ class LocalProperties extends ChangeNotifier {
   
   final ValueNotifier<bool> longPressedIndex = ValueNotifier<bool>(false);
   final ValueNotifier<bool> showSearchPage = ValueNotifier<bool>(false);
+  
+  final GlobalKey<SearchState> searchScroll = GlobalKey();
+  final GlobalKey<SearchState> libraryScroll = GlobalKey();
+  final GlobalKey<RecommendState> recommendScroll = GlobalKey();
+
+  Future<void> restartScrolls() async {
+    searchScroll.currentState?.scrollToTop();
+    libraryScroll.currentState?.scrollToTop();
+    recommendScroll.currentState?.scrollToTop();
+  }
 
 }

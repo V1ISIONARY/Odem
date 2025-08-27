@@ -1,40 +1,41 @@
 import 'package:odem/backend/model/manga/chapter_detail.dart';
 
 class RecoModel {
-  final String mangaid;
-  final String title;
-  final String status;
-  final int volume_count;
-  final String main_image;
-  final String cover_image;
-  final String description;
-  final String chapter_count;
 
-  final List<String> tags;
+  List<ChapterDetail> chapterdetails;
+  final String chapter_count;
   final List<String> authors;
   final List<String> artists;
-
+  final String cover_image;
+  final String description;
+  final List<String> tags;
+  final String main_image;
+  final int volume_count;
+  DateTime updatedAt;
+  final String mangaid;
+  final String status;
+  final String title;
+  bool isFavorite;
   double rating;
-  List<ChapterDetail> chapterdetails;
-
-  /// ✅ New field to track when this entry was added/updated
-  final DateTime updatedAt;
+  bool isPinned;
 
   RecoModel({
-    required this.title,
-    required this.status,
-    required this.rating,
-    required this.mangaid,
-    required this.description,
-    required this.main_image,
-    required this.cover_image,
-    required this.volume_count,
+    required this.chapterdetails,
     required this.chapter_count,
-    required this.tags,
+    required this.volume_count,
+    required this.description,
+    required this.cover_image,
+    required this.main_image,
+    required this.updatedAt,
+    this.isFavorite = false,
+    this.isPinned = false,
+    required this.mangaid,
     required this.artists,
     required this.authors,
-    required this.chapterdetails,
-    required this.updatedAt,
+    required this.status,
+    required this.rating,
+    required this.title,
+    required this.tags,
   });
 
   factory RecoModel.fromJson(Map<String, dynamic> json) {
@@ -49,10 +50,10 @@ class RecoModel {
       title: json['title'] ?? 'N/A',
       status: json['status'] ?? 'N/A',
       rating: (json['rating'] is int)
-          ? (json['rating'] as int).toDouble()
-          : (json['rating'] is String)
-              ? double.tryParse(json['rating']) ?? 0.0
-              : json['rating'] ?? 0.0,
+        ? (json['rating'] as int).toDouble()
+        : (json['rating'] is String)
+          ? double.tryParse(json['rating']) ?? 0.0
+          : json['rating'] ?? 0.0,
       description: json['description'] ?? 'N/A',
       cover_image: normalizeImage(json['cover_image']),
       volume_count: int.tryParse(json['volume_count'].toString()) ?? 0,
@@ -63,33 +64,35 @@ class RecoModel {
       artists: List<String>.from(json['artists'] ?? []),
       authors: List<String>.from(json['authors'] ?? []),
       chapterdetails: (json['chapterdetails'] as List<dynamic>?)
-              ?.map((item) => ChapterDetail.fromJson(item))
-              .toList() ??
-          [],
-      /// ✅ Parse updatedAt, fallback to now
+          ?.map((item) => ChapterDetail.fromJson(item))
+          .toList() ??
+        [],
       updatedAt: json['updatedAt'] != null
-          ? DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now()
-          : DateTime.now(),
+        ? DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now()
+        : DateTime.now(),
+      isPinned: json['isPinned'] ?? false,
+      isFavorite: json['isFavorite'] ?? false
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': mangaid,
-      'title': title,
-      'status': status,
-      'rating': rating,
+      'chapterdetails': chapterdetails.map((e) => e.toJson()).toList(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'chapter_count': chapter_count,
       'volume_count': volume_count,
-      'main_image': main_image,
       'cover_image': cover_image,
       'description': description,
-      'chapter_count': chapter_count,
-      'tags': tags,
+      'main_image': main_image,
+      'isFavorite': isFavorite,
+      'isPinned' : isPinned,
       'authors': authors,
       'artists': artists,
-      'chapterdetails': chapterdetails.map((e) => e.toJson()).toList(),
-      /// ✅ Save updatedAt as ISO string
-      'updatedAt': updatedAt.toIso8601String(),
+      'status': status,
+      'rating': rating,
+      'title': title,
+      'id': mangaid,
+      'tags': tags,
     };
   }
 }

@@ -5,7 +5,6 @@ import 'package:odem/backend/model/manga/chapter_detail.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/main-content/reading.dart';
 import 'package:page_transition/page_transition.dart';
-
 import '../schema/text_format.dart';
 
 class ChapterCard extends StatelessWidget {
@@ -48,12 +47,16 @@ class ChapterCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ContentTitle(title: '${extracted.chapter}'),
+                ContentTitle(
+                  title: '${extracted.chapter}',
+                  color: extracted.percentage == 100 ? Colors.grey : Colors.white,
+                ),
                 ContentDescrip(
                   description: page != null && page! > 0 
                     ? '${extracted.date} ⋅ Page: $page' 
                     : extracted.date,
                   size: 9,
+                  color: extracted.percentage == 100 ? Colors.grey : Colors.white,
                 ),
               ],
             ),

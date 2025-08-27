@@ -3,24 +3,28 @@ import 'package:flutter/material.dart';
 class ContentTitle extends StatelessWidget {
   final String title;
   final String? alignment;
+  final Color? color;
 
   const ContentTitle({
     super.key,
     required this.title,
     this.alignment,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      color: color ?? Colors.white,
+      fontSize: 10,
+    );
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final textPainter = TextPainter(
           text: TextSpan(
             text: title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-            ),
+            style: textStyle,
           ),
           maxLines: 1,
           textDirection: TextDirection.ltr,
@@ -28,15 +32,11 @@ class ContentTitle extends StatelessWidget {
 
         final textWidth = textPainter.width;
         final thresholdWidth = constraints.maxWidth * 0.8;
-
         final applyFade = textWidth > thresholdWidth;
 
         final textWidget = Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-          ),
+          style: textStyle,
           textAlign: _getTextAlignment(),
           maxLines: 1,
           overflow: TextOverflow.clip,
@@ -47,15 +47,15 @@ class ContentTitle extends StatelessWidget {
 
         return ShaderMask(
           shaderCallback: (Rect bounds) {
-            return const LinearGradient(
+            return LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                Colors.white,
-                Colors.white,
+                textStyle.color!,
+                textStyle.color!,
                 Colors.transparent,
               ],
-              stops: [0.0, 0.5, 1.0],
+              stops: const [0.0, 0.5, 1.0],
             ).createShader(bounds);
           },
           blendMode: BlendMode.dstIn,

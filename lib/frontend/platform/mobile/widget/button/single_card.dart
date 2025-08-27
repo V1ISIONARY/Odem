@@ -37,7 +37,6 @@ class _SingleCardState extends State<SingleCard> {
     }
 
     final main_image = getWeservUrl(widget.zipdata!.main_image);
-
     return GestureDetector(
       onTap:  widget.disableTap
         ? null

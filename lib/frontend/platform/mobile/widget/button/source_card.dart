@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:odem/backend/model/extension.dart';
 import '../schema/text_format.dart';

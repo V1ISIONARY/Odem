@@ -3,8 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:odem/frontend/platform/mobile/widget/button/menu_card.dart';
 import 'package:page_transition/page_transition.dart';
 
-import 'schema/color.dart';
-
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({super.key});
 

@@ -44,12 +44,21 @@ class FetchSearch extends MangaState {
 class LoadingMangaImage extends MangaState {
   const LoadingMangaImage();
 }
+
 class MangaImageLoaded extends MangaState {
-  final List<MangaImgModel> images;
-  const MangaImageLoaded(this.images);
-  @override
-  List<Object?> get props => [images];
+  final List<MangaImgModel> current;
+  final List<MangaImgModel> previous;
+  final List<MangaImgModel> next;
+
+  const MangaImageLoaded(
+    this.current, 
+    {
+      this.previous = const [], 
+      this.next = const []
+    }
+  );
 }
+
 
 class LoadingOdem extends MangaState {
   const LoadingOdem();
