@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:odem/backend/model/extension.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
 import 'package:odem/backend/properties/functionalities/sync.dart';
 import 'package:odem/backend/properties/local_properties.dart';
@@ -33,14 +32,6 @@ class _LibraryCardState extends State<LibraryCard> {
   final localProperties = LocalProperties();
   bool isFav = true; 
 
-  String getWeservUrl(String originalUrl) {
-    final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
-    final parts = noProtocol.split('/');
-    final domain = parts.first;
-    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
-    return 'https://images.weserv.nl/?url=$domain/$pathSegments';
-  }
-
   String? _getLogoUrl(String sourceKey) {
     final extensions = localProperties.installedExtension.value;
 
@@ -48,7 +39,7 @@ class _LibraryCardState extends State<LibraryCard> {
       final match = extensions.firstWhere(
         (ext) => ext.key == sourceKey,
       );
-      return getWeservUrl(match.logoImg);
+      return localProperties.getWeservUrl(match.logoImg);
     } catch (e) {
       return null; 
     }
@@ -56,7 +47,7 @@ class _LibraryCardState extends State<LibraryCard> {
 
   @override
   Widget build(BuildContext context) {
-    final main_image = getWeservUrl(widget.zipdata!.main_image);
+    final main_image = localProperties.getWeservUrl(widget.zipdata!.main_image);
     if (widget.zipdata == null) return const SizedBox();
 
     return GestureDetector(

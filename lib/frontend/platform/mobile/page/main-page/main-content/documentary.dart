@@ -27,6 +27,7 @@ class Documentary extends StatefulWidget {
 }
 
 class _DocumentaryState extends State<Documentary> {
+  final localProperties = LocalProperties();
   late ScrollController _scrollController;
   bool isFavorite = false;
   bool _isScrolled = false;
@@ -61,16 +62,7 @@ class _DocumentaryState extends State<Documentary> {
     super.dispose();
   }
 
-  String getWeservUrl(String originalUrl) {
-    final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
-    final parts = noProtocol.split('/');
-    final domain = parts.first;
-    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
-    return 'https://images.weserv.nl/?url=$domain/$pathSegments';
-  }
-
   Future<void> _loadFavoriteStatus() async {
-    final localProperties = LocalProperties();
     final currentMap = Map<String, List<RecoModel>>.from(
       localProperties.libraryData.value,
     );
@@ -88,7 +80,6 @@ class _DocumentaryState extends State<Documentary> {
   }
 
   Future<void> _toggleFavorite() async {
-    final localProperties = LocalProperties();
     final currentMap = Map<String, List<RecoModel>>.from(
       localProperties.libraryData.value,
     );
@@ -129,14 +120,13 @@ class _DocumentaryState extends State<Documentary> {
 
   @override
   Widget build(BuildContext context) {
-    final main_image = getWeservUrl(widget.extracted!.main_image);
-    final cover_image = getWeservUrl(widget.extracted!.cover_image);
+    final main_image =  localProperties.getWeservUrl(widget.extracted!.main_image);
+    final cover_image = localProperties.getWeservUrl(widget.extracted!.cover_image);
 
     final chapters = isAscending
         ? List.of(widget.extracted!.chapterdetails)
         : List.of(widget.extracted!.chapterdetails.reversed);
 
-    final localProperties = LocalProperties();
     return Scaffold(
       backgroundColor: Colors.black,
       body: CustomScrollView(
@@ -157,6 +147,7 @@ class _DocumentaryState extends State<Documentary> {
                       imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                       child: Image.network(
                         cover_image,
+                        filterQuality: FilterQuality.high,
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity,
@@ -563,10 +554,12 @@ class _DocumentaryState extends State<Documentary> {
                     description: widget.extracted!.description,
                   ),
                 ),
-                Padding(
+                widget.extracted!.tags.isNotEmpty
+                ? Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: CategoryCompo(widget.extracted!.tags),
-                ),
+                )
+                : SizedBox.shrink(),
                 Padding(
                   padding: EdgeInsets.only(
                     left: 15,

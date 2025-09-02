@@ -203,7 +203,7 @@ class MangaRepository {
       ? localProperties.libraryRoot.value
       : await getMangaRoot();
 
-    final url = Uri.parse('$endpoint/manga/$mangaRoot/reader/$seriesPath?lock=$key');
+    final url = Uri.parse('$endpoint/manga/$mangaRoot/reader?url=$seriesPath&lock=$key');
     final response = await http.get(url);
 
     if (response.statusCode != 200) {

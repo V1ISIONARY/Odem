@@ -73,7 +73,27 @@ class SourceCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ContentTitle(title: extension?.exName ?? ''),
-                            ContentDescrip(description: '${extension?.language ?? ''} ⋅ ${extension?.version ?? ''}'),
+                            RichText(
+                              text: TextSpan(
+                                style: TextStyle(color: Colors.white70, fontSize: 10),
+                                children: [
+                                  TextSpan(text: '${extension?.language ?? ''} ⋅ ${extension?.version ?? ''} ⋅ '),
+                                  TextSpan(
+                                    text: '${extension?.contentAge ?? ''}',
+                                    style: TextStyle(
+                                      color: (extension?.contentAge == '18+')
+                                        ? Colors.red
+                                        : (extension?.contentAge == '13+')
+                                          ? Colors.green
+                                          : (extension?.contentAge == '7+')
+                                            ? const Color.fromARGB(255, 124, 169, 206)
+                                            : Colors.white70,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
                           ],
                         ),
                         const Spacer(),

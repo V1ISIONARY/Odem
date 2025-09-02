@@ -1,4 +1,5 @@
 class Extension {
+  final String contentAge;
   final String language;
   final String version;
   final String logoImg;
@@ -6,6 +7,7 @@ class Extension {
   final String key;
 
   Extension({
+    required this.contentAge,
     required this.language,
     required this.version,
     required this.logoImg,
@@ -15,6 +17,7 @@ class Extension {
 
   factory Extension.fromJson(Map<String, dynamic> json) {
     return Extension(
+      contentAge: json['contentAge'] ?? '',
       language: json['language'],
       version: json['version'],
       logoImg: json['logoImg'],
@@ -24,11 +27,11 @@ class Extension {
   }
 
   Map<String, dynamic> toJson() => {
+    'contentAge': contentAge,
     'language': language,
     'version': version,
     'logoImg': logoImg,
     'exName': exName,
     'key': key
   };
-
 }

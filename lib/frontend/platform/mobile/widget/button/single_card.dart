@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
+import 'package:odem/backend/properties/local_properties.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/main-content/documentary.dart';
 import 'package:page_transition/page_transition.dart';
 import '../schema/text_format.dart';
@@ -21,14 +22,7 @@ class SingleCard extends StatefulWidget {
 }
 
 class _SingleCardState extends State<SingleCard> {
-
-  String getWeservUrl(String originalUrl) {
-    final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
-    final parts = noProtocol.split('/'); 
-    final domain = parts.first;
-    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
-    return 'https://images.weserv.nl/?url=$domain/$pathSegments';
-  }
+  final localProperties = LocalProperties();
   
   @override
   Widget build(BuildContext context) {
@@ -36,7 +30,7 @@ class _SingleCardState extends State<SingleCard> {
       return const SizedBox();
     }
 
-    final main_image = getWeservUrl(widget.zipdata!.main_image);
+    final main_image = localProperties.getWeservUrl(widget.zipdata!.main_image);
     return GestureDetector(
       onTap:  widget.disableTap
         ? null

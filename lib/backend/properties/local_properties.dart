@@ -101,7 +101,7 @@ class LocalProperties extends ChangeNotifier {
     );
     if (foundKey.isNotEmpty) {
       final list = migrationData.value[foundKey];
-      if (list != null && list.isNotEmpty) recommendManga.value = list;
+      if (list != null && list.isNotEmpty) recommendManga.value = List.from(list)..shuffle();
     }
     notifyListeners();
   }
@@ -117,6 +117,20 @@ class LocalProperties extends ChangeNotifier {
     searchScroll.currentState?.scrollToTop();
     libraryScroll.currentState?.scrollToTop();
     recommendScroll.currentState?.scrollToTop();
+  }
+
+  String getWeservUrl(String originalUrl) {
+    if (originalUrl.contains("proxy_image?url=")) {
+      return originalUrl;
+    }
+
+    // Otherwise, convert the direct CDN URL for Weserv
+    final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
+    final parts = noProtocol.split('/');
+    final domain = parts.first;
+    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
+
+    return 'https://images.weserv.nl/?url=$domain/$pathSegments';
   }
 
 }

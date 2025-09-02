@@ -230,7 +230,7 @@ class RecommendState extends State<Recommend> {
                                 }
 
                                 final isFavorite = currentMap[sourceKey]!
-                                    .any((item) => item.mangaid == manga.mangaid);
+                                  .any((item) => item.mangaid == manga.mangaid);
 
                                 if (isFavorite) {
                                   currentMap[sourceKey]!.removeWhere((item) => item.mangaid == manga.mangaid);

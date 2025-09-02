@@ -53,10 +53,10 @@ class _SplashState extends State<Splash> {
         });
     });
 
-    if (localProperties.extensions.value.isNotEmpty) {
-      _navigateToMainWrapper(skipBloc: true);
-      return;
-    }
+    // if (localProperties.extensions.value.isNotEmpty) {
+    //   _navigateToMainWrapper(skipBloc: true);
+    //   return;
+    // }
     _hasTriggeredLoad = true;
     context.read<MangaBloc>().add(LoadExtensions());
     _startNavigationTimer();

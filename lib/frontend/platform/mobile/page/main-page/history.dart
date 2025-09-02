@@ -65,10 +65,9 @@ class _HistoryState extends State<History> {
         child: Builder(
           builder: (context) {
             final allManga = localProperties.libraryData.value.values
-                .expand((list) => list.cast<RecoModel>())
-                .toList();
+              .expand((list) => list.cast<RecoModel>())
+              .toList();
 
-            // Check if ANY chapter across all manga has percentage >= 90
             final hasHistory = allManga.any(
               (manga) => manga.chapterdetails.any((c) => c.percentage >= 90),
             );

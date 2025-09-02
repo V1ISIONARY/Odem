@@ -44,12 +44,12 @@ class HistoryCard extends StatelessWidget {
       'mangaId': manga.mangaid ?? 'unknownId',
       'title': manga.title ?? 'N/A',
       'percentage': top.percentage,
-      'timeRead': top.timeRead, // always DateTime
+      'timeRead': top.timeRead,
     };
   }
 
   String formatDateTime(DateTime time) {
-    return DateFormat("MMM d, yyyy hh:mma").format(time);
+    return DateFormat("MMM d, yyyy h:mma").format(time);
   }
 
   @override
@@ -72,7 +72,7 @@ class HistoryCard extends StatelessWidget {
     });
 
     for (var item in items) {
-      final date = item['timeRead'] as DateTime; // ✅ guaranteed DateTime
+      final date = item['timeRead'] as DateTime; 
       final difference = now.difference(date).inDays;
 
       if (difference == 0) {
@@ -123,22 +123,22 @@ class HistoryCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: (item['main_image'] as String?)?.isNotEmpty ?? false
-                  ? Image.network(
-                      item['main_image'],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'lib/resources/image/static/solo.png',
-                          fit: BoxFit.cover,
-                          color: Colors.white,
-                        );
-                      },
-                    )
-                  : Image.asset(
-                      'lib/resources/image/static/solo.png',
-                      fit: BoxFit.cover,
-                      color: Colors.white,
-                    ),
+                ? Image.network(
+                    item['main_image'],
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'lib/resources/image/static/solo.png',
+                        fit: BoxFit.cover,
+                        color: Colors.white,
+                      );
+                    },
+                  )
+                : Image.asset(
+                    'lib/resources/image/static/solo.png',
+                    fit: BoxFit.cover,
+                    color: Colors.white,
+                  ),
             ),
           ),
           Padding(

@@ -134,14 +134,6 @@ class _ReadingState extends State<Reading> {
     super.dispose();
   }
 
-  String getWeservUrl(String originalUrl) {
-    final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
-    final parts = noProtocol.split('/');
-    final domain = parts.first;
-    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
-    return 'https://images.weserv.nl/?url=$domain/$pathSegments';
-  }
-
   @override
   Widget build(BuildContext context) {
     bool isSpecialChapter = widget.extracted!.chapter.trim().contains(":");
@@ -221,7 +213,7 @@ class _ReadingState extends State<Reading> {
                         } 
 
                         if (index < images.length) {
-                          final mainImage = getWeservUrl(images[index].url.trim());
+                          final mainImage = localProperties.getWeservUrl(images[index].url.trim());
                           return VisibilityDetector(
                             key: Key('image_visibility_$index'),
                             onVisibilityChanged: (visibilityInfo) {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odem/backend/architecture/bloc/manga/manga_bloc.dart';
 import 'package:odem/backend/model/manga/chapter_detail.dart';
 import 'package:odem/backend/model/manga/recommend.dart';
+import 'package:odem/backend/properties/local_properties.dart';
 import 'package:odem/frontend/platform/mobile/page/main-page/main-content/reading.dart';
 import 'package:page_transition/page_transition.dart';
 import '../schema/text_format.dart';
@@ -23,9 +24,11 @@ class ChapterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localProperties = LocalProperties();
     return GestureDetector(
       onTap: (){
         context.read<MangaBloc>().add(FetchMangaImages(extracted.link));
+        localProperties.mangaImgSections.clear();
         Navigator.push(
           context,
           PageTransition(
