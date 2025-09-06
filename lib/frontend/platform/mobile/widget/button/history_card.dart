@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:odem/backend/properties/local_properties.dart';
 import '../schema/text_format.dart';
 import 'package:odem/backend/model/manga/chapter_detail.dart';
 import 'package:intl/intl.dart'; 
@@ -11,21 +12,14 @@ class HistoryCard extends StatelessWidget {
     required this.zipdata,
   });
 
-  String getWeservUrl(String? originalUrl) {
-    if (originalUrl == null || originalUrl.isEmpty) return '';
-    final noProtocol = originalUrl.replaceFirst(RegExp(r'^https?://'), '');
-    final parts = noProtocol.split('/');
-    final domain = parts.first;
-    final pathSegments = parts.sublist(1).map(Uri.encodeComponent).join('/');
-    return 'https://images.weserv.nl/?url=$domain/$pathSegments';
-  }
-
   String getNumericChapter(String chapter) {
     final match = RegExp(r'\d+(\.\d+)?').firstMatch(chapter);
     return match?.group(0) ?? '0';
   }
 
   Map<String, dynamic>? getTopChapter(dynamic manga) {
+
+    final localProperties = LocalProperties();
     final chapters = (manga.chapterdetails as List<ChapterDetail>?)
         ?.where((c) => c.percentage >= 90 && getNumericChapter(c.chapter).isNotEmpty)
         .toList();
@@ -39,7 +33,7 @@ class HistoryCard extends StatelessWidget {
 
     final top = chapters.first;
     return {
-      'main_image': getWeservUrl(manga.main_image),
+      'main_image': localProperties.getWeservUrl(manga.main_image),
       'chapter': getNumericChapter(top.chapter),
       'mangaId': manga.mangaid ?? 'unknownId',
       'title': manga.title ?? 'N/A',

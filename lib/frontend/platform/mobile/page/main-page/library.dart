@@ -108,7 +108,20 @@ class LibraryState extends State<Library> with AutomaticKeepAliveClientMixin {
             child: Row(children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    // final data = localProperties.libraryData.value;
+                    // if (data.isEmpty) {
+                    //   print("LibraryData is empty!");
+                    // } else {
+                    //   print("Current LibraryData:");
+                    //   data.forEach((key, list) {
+                    //     print("Category: $key (${list.length} items)");
+                    //     for (var item in list) {
+                    //       print("   -> ${item.title}"); // adjust field if needed
+                    //     }
+                    //   });
+                    // }
+                  },
                   child: Icon(Icons.search_outlined, color: Colors.white, size: 20)
                 ),
               ),

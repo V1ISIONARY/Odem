@@ -14,7 +14,6 @@ class LocalProperties extends ChangeNotifier {
 
   final libraryData = ValueNotifier<Map<String, List<RecoModel>>>({});
   final libraryManga = ValueNotifier<List<RecoModel>>([]);
-
   final recommendManga = ValueNotifier<List<RecoModel>>([]);
   
   final mangaImg = ValueNotifier<List<MangaImgModel>>([]);

@@ -172,44 +172,45 @@ class _ReadingState extends State<Reading> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         if (index == images.length) {
-                          return Container(
-                            height: 200,
-                            width: double.infinity,
-                            color: Colors.transparent,
-                            padding: const EdgeInsets.only(left: 20),
-                            margin: const EdgeInsets.only(bottom: 40),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.check_circle_sharp, color: Colors.white, size: 15),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Current Chapter: ${widget.extracted!.chapter}",
-                                      style: const TextStyle(color: Colors.white, fontSize: 15),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Icon(Icons.circle_outlined, color: Colors.white, size: 15),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      "Next Chapter: ${widget.extracted!.chapter}",
-                                      style: const TextStyle(color: Colors.white, fontSize: 15),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
+                          return SizedBox.shrink();
+                          // return Container(
+                          //   height: 200,
+                          //   width: double.infinity,
+                          //   color: Colors.transparent,
+                          //   padding: const EdgeInsets.only(left: 20),
+                          //   margin: const EdgeInsets.only(bottom: 40),
+                          //   child: Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Row(
+                          //         crossAxisAlignment: CrossAxisAlignment.center,
+                          //         mainAxisAlignment: MainAxisAlignment.start,
+                          //         children: [
+                          //           const Icon(Icons.check_circle_sharp, color: Colors.white, size: 15),
+                          //           const SizedBox(width: 10),
+                          //           Text(
+                          //             "Current Chapter: ${widget.extracted!.chapter}",
+                          //             style: const TextStyle(color: Colors.white, fontSize: 15),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       const SizedBox(height: 20),
+                          //       Row(
+                          //         crossAxisAlignment: CrossAxisAlignment.center,
+                          //         mainAxisAlignment: MainAxisAlignment.start,
+                          //         children: [
+                          //           const Icon(Icons.circle_outlined, color: Colors.white, size: 15),
+                          //           const SizedBox(width: 10),
+                          //           Text(
+                          //             "Next Chapter: ${widget.extracted!.chapter}",
+                          //             style: const TextStyle(color: Colors.white, fontSize: 15),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ],
+                          //   ),
+                          // );
                         } 
 
                         if (index < images.length) {

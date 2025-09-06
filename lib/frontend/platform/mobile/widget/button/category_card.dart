@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:odem/backend/properties/local_properties.dart';
 
 class CategoryCard extends StatefulWidget {
-  final String selectedCategory;
   final Function(String) onCategoryChanged;
+  final String selectedCategory;
 
   const CategoryCard({
     Key? key,
@@ -24,7 +24,6 @@ class _CategoryCardState extends State<CategoryCard> {
       width: double.infinity,
       height: 30,
       child: ValueListenableBuilder<List<dynamic>>(
-        // listen to the ValueNotifier of extensions
         valueListenable: localProperties.installedExtension,
         builder: (context, extensions, _) {
           return SingleChildScrollView(
@@ -35,8 +34,8 @@ class _CategoryCardState extends State<CategoryCard> {
                 _buildCategoryItem('All'),
                 _buildCategoryItem('Downloads'),
                 ...extensions
-                    .map((ext) => _buildCategoryItem(ext.exName))
-                    .toList(),
+                  .map((ext) => _buildCategoryItem(ext.exName, value: ext.key))
+                  .toList(),
                 const SizedBox(width: 15),
               ],
             ),
@@ -46,13 +45,14 @@ class _CategoryCardState extends State<CategoryCard> {
     );
   }
 
-  Widget _buildCategoryItem(String label) {
-    final bool isSelected = widget.selectedCategory == label;
+  Widget _buildCategoryItem(String label, {String? value}) {
+    final categoryValue = value ?? label; 
+    final bool isSelected = widget.selectedCategory == categoryValue;
 
     return GestureDetector(
       onTap: () {
-        widget.onCategoryChanged(label);
-        setState(() {}); // re-render selected state
+        widget.onCategoryChanged(categoryValue); 
+        setState(() {});
       },
       child: Container(
         margin: const EdgeInsets.only(right: 10),
@@ -68,7 +68,7 @@ class _CategoryCardState extends State<CategoryCard> {
         height: 30,
         child: Center(
           child: Text(
-            label,
+            label, 
             style: TextStyle(
               color: isSelected ? Colors.black : Colors.white70,
               fontSize: 9,
@@ -79,4 +79,5 @@ class _CategoryCardState extends State<CategoryCard> {
       ),
     );
   }
+
 }
