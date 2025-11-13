@@ -1,83 +1,71 @@
-## 🛠️ Technologies Used
+<img src="https://avatars.githubusercontent.com/u/230404259?s=200&v=4" width="80" height="80">
+<h2 style="font-size: 2em; font-weight: bold;">ODEM : Other-Dimension</h2>
 
-### Framework:
-- **[Flutter](https://flutter.dev/)**: A powerful open-source UI toolkit for building natively compiled mobile, web, and desktop applications from a single codebase.
+Welcome to the ODEM repository! This application is a free and open-source, cross-platform manga reader designed for seamless and enjoyable manga reading across multiple devices. The frontend is built using Dart, while the backend is private and currently not publicly available.
 
-### Programming Language:
-- **Dart**: A robust, scalable, and type-safe programming language optimized for client-side development.
+## Features
 
----
+- **Cross-Platform Reading:** Read manga smoothly across multiple devices.  
+- **Library Management:** Organize and save your favorite manga for easy access.  
+- **User-Friendly Interface:** Enjoy a clean and intuitive reading experience.  
 
-## 🚀 Getting Started
+## Technologies Used
+
+- **Frontend:**
+  - Dart
+
+- **Backend:**
+  - Private 
+
+## Getting Started
+
+To get a local copy up and running, follow these steps:
 
 ### Prerequisites
 
-1. Install Flutter:
-   ```bash
-   https://flutter.dev/docs/get-started/install
-   ```
-2. Ensure Dart is included in your Flutter SDK.
+Ensure that Dart is installed on your system.
 
-### Installation
+1. Clone this repository:
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/V1ISIONARY/Odem.git
-   ```
+    ```bash
+    git clone https://github.com/yourusername/ODEM.git
+    ```
+
 2. Navigate to the project directory:
-   ```bash
-   cd odem
-   ```
-3. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
-4. Run the app:
-   ```bash
-   flutter run
-   ```
 
----
+    ```bash
+    cd ODEM
+    ```
 
-## 🧩 Contributions
+3. Navigate to the frontend directory and install dependencies:
 
-We welcome contributions from the community! Please fork the repository, make your changes, and submit a pull request.
+    ```bash
+    cd frontend
+    flutter pub get
+    ```
 
-### Steps to Contribute:
-1. Fork the repository.
-2. Create a new branch:
-   ```bash
-   git checkout -b feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add your message here"
-   ```
-4. Push to the branch:
-   ```bash
-   git push origin feature-name
-   ```
-5. Open a pull request in the main repository.
+4. Running the application:
 
----
+    Open a terminal to start the frontend:
 
-## 📄 License
+    ```bash
+    dart run
+    ```
 
-<div align="center">
-   <pre>
-      Copyright © 2015 Javier Tomás
-      Copyright © 2024 Mihon Open Source Project
+> Backend setup is private and will be added once available.
 
-      Licensed under the Apache License, Version 2.0 (the "License");
-      you may not use this file except in compliance with the License.
-      You may obtain a copy of the License at
+## Contributing
 
-      http://www.apache.org/licenses/LICENSE-2.0
+There are no contributors yet, but contributions are welcome! Feel free to fork the repository and submit pull requests.
 
-      Unless required by applicable law or agreed to in writing, software
-      distributed under the License is distributed on an "AS IS" BASIS,
-      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-      See the License for the specific language governing permissions and
-      limitations under the License.
-  </pre>
-</div>
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+Special thanks to the Dart and Flutter communities for providing the tools and libraries that made this project possible.
+
+## Contributors
+
+- None yet.
